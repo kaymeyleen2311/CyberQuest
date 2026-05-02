@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Screen Quest: Digital Master (Final Defense Edition)</title>
+    <style>
+        :root { 
+            --primary: #6c5ce7; --primary-light: #a29bfe; --secondary: #fd79a8; 
+            --success: #00b894; --error: #ff7675; --glass: rgba(255, 255, 255, 0.95);
+        }
+        * { touch-action: manipulation; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: 'Comic Sans MS', 'Segoe UI', sans-serif; 
+            background: linear-gradient(-45deg, #6c5ce7, #a29bfe, #fd79a8, #00b894); 
+            background-size: 400% 400%; 
+            animation: gradientBG 15s ease infinite; 
+            display: flex; align-items: center; justify-content: center; 
+            min-height: 100vh; margin: 0; overflow: hidden; 
+        }
+
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        /* Loader */
+        #loader { position: fixed; inset: 0; background: radial-gradient(circle, var(--primary) 0%, #4834d4 100%); z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
+        .load-bar-container { width: 250px; height: 14px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 20px 0; overflow: hidden; border: 2px solid white; }
+        #load-fill { width: 0%; height: 100%; background: white; transition: width 0.1s linear; }
+        #tap-msg { visibility: hidden; cursor: pointer; background: white; color: var(--primary); padding: 12px 25px; border-radius: 30px; font-weight: bold; }
+
+        /* COMPRESSED NAVIGATION BAR */
+        .top-nav-bar { 
+            position: absolute; 
+            top: 12px; 
+            left: 0; 
+            right: 0; 
+            padding: 0 10px; 
+            z-index: 10001; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* Centers all elements together */
+            gap: 10px; /* Controls the exact space between components */
+        }
+
+        .btn-nav { 
+            background: var(--glass); 
+            border: 2px solid var(--primary); 
+            padding: 0 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: var(--primary); 
+            box-shadow: 0 3px 0 var(--primary-light); 
+            transition: 0.2s; 
+            font-size: 11px; 
+            border-radius: 12px; 
+            white-space: nowrap;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+        }
+
+        #back-btn-text { min-width: 75px; }
+
+        .lang-group { 
+            display: flex; 
+            width: 160px; 
+            flex-shrink: 0;
+        }
+
+        #lang-en { border-radius: 12px 0 0 12px; border-right: 1px solid var(--primary); flex: 1; }
+        #lang-tl { border-radius: 0 12px 12px 0; border-left: 1px solid var(--primary); flex: 1; }
+        .lang-active { background: var(--primary) !important; color: white !important; }
+
+        #music-btn {
+            font-size: 18px;
+            width: 40px;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        
+        .app-container { background: var(--glass); border-radius: 40px; width: 95%; max-width: 850px; height: 600px; position: relative; border: 6px solid rgba(255,255,255,0.5); overflow: hidden; display: flex; box-shadow: 0 25px 50px rgba(0,0,0,0.2); z-index: 1000; margin-top: 40px; }
+        .page { display: none; flex-direction: column; width: 100%; height: 100%; padding: 20px; align-items: center; justify-content: center; text-align: center; }
+        .active { display: flex; }
+        
+        .btn-main { padding: 15px 40px; background: linear-gradient(to bottom, var(--success), #009470); color: white; border: none; border-radius: 50px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 6px 0 #006b52; margin: 10px; transition: 0.1s; }
+        .btn-main:active { transform: translateY(3px); box-shadow: 0 2px 0 #006b52; }
+
+        .dir-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); max-width: 450px; border: 3px solid var(--primary-light); margin-bottom: 20px; }
+        .dir-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; text-align: left; font-size: 18px; color: #444; }
+        .dir-num { background: var(--primary); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; }
+        
+        .battery-bar { width: 80%; height: 20px; background: #eee; border-radius: 10px; margin: 10px 0; overflow: hidden; border: 2px solid #ddd; }
+        #battery-fill { width: 100%; height: 100%; background: var(--success); transition: width 0.1s linear; }
+        .slot { width: 38px; height: 48px; border-radius: 8px; background: white; border: 2px solid var(--primary-light); font-size: 18px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; margin: 0 2px; color: var(--primary); text-transform: uppercase; }
+        .wheel-container { position: relative; width: 280px; height: 280px; margin: 15px auto; display: flex; align-items: center; justify-content: center; }
+        .wheel-bg { position: absolute; width: 100%; height: 100%; background: white; border-radius: 50%; border: 6px solid var(--primary-light); z-index: 1; }
+        .letter-btn { position: absolute; width: 52px; height: 52px; border-radius: 50%; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 0 #4834d4; z-index: 2; transform: translate(-50%, -50%); text-transform: uppercase; }
+        
+        #flash-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+        .wrong-flash { animation: flashRed 0.5s ease-in-out; }
+        @keyframes flashRed { 0% { background: transparent; } 50% { background: rgba(255,118,117,0.6); } 100% { background: transparent; } }
+        .status-overlay { display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.98); z-index: 1100; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
+    </style>
+</head>
+<body onload="startLoadingProcess()">
+
+<div id="flash-overlay"></div>
+
+<div class="top-nav-bar">
+    <button id="back-btn-text" class="btn-nav" onclick="goBack()">⬅️ BACK</button>
+    
+    <div class="lang-group">
+        <button id="lang-en" class="btn-nav lang-active" onclick="changeLang('en')">ENGLISH</button>
+        <button id="lang-tl" class="btn-nav" onclick="changeLang('tl')">TAGALOG</button>
+    </div>
+
+    <button id="music-btn" class="btn-nav" onclick="AudioEngine.toggleMusic()">&#128263;</button>
+</div>
+
+<div id="loader">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎮 SCREEN QUEST</h1>
+    <p id="load-status">PREPARING QUEST...</p>
+    <div class="load-bar-container"><div id="load-fill"></div></div>
+    <h2 id="tap-msg">TAP TO START</h2>
+</div>
+
+<div class="app-container">
+    <div id="page-intro" class="page active">
+        <h1 id="txt-ready" style="font-size: 40px; color: var(--primary);">Are you ready?</h1>
+        <button id="txt-play" class="btn-main" onclick="navPage('page-dir')">START GAME</button>
+    </div>
+
+    <div id="page-dir" class="page">
+        <h1 id="txt-dir_title" style="color: var(--secondary); font-size: 32px;">📜 HOW TO PLAY</h1>
+        <div class="dir-card">
+            <div class="dir-item"><div class="dir-num">1</div><p id="txt-d1">Read the hint carefully to know the word.</p></div>
+            <div class="dir-item"><div class="dir-num">2</div><p id="txt-d2">Tap the letters in the circle to spell it.</p></div>
+            <div class="dir-item"><div class="dir-num">3</div><p id="txt-d3">Finish before the battery bar runs out!</p></div>
+        </div>
+        <button id="txt-gotit" class="btn-main" onclick="navPage('page-profile')">GOT IT! 👍</button>
+    </div>
+
+    <div id="page-profile" class="page">
+        <h1 id="txt-profile">👤 PLAYER</h1>
+        <input type="text" id="user-name" placeholder="Enter name..." style="padding:15px; border-radius:15px; border:2px solid var(--primary-light); width:280px; font-size:20px; text-align:center; outline: none; margin-bottom: 10px;">
+        <div id="login-error" style="color:var(--error); font-weight:bold; visibility:hidden;">Required!</div>
+        <div style="display:flex; gap:15px; margin-top:20px;">
+            <button class="btn-main" onclick="startGame(1)">SET 1 🍎</button>
+            <button id="btn-set2" class="btn-main" onclick="startGame(2)">SET 2 💻</button>
+        </div>
+    </div>
+
+    <div id="page-game" class="page">
+        <div style="display:flex; justify-content:space-between; width:90%; color:var(--primary); font-weight:bold; margin-bottom: 10px;">
+            <span id="display-name">---</span>
+            <span id="txt-score_label">SCORE: <span id="current-score">0</span></span>
+        </div>
+        <div class="battery-bar"><div id="battery-fill"></div></div>
+        <div id="hint" style="background:white; padding:15px; border-radius:20px; min-height:65px; margin:10px; font-weight:bold; display: flex; align-items: center; justify-content: center; width: 90%;"></div>
+        <div id="slots" style="margin-bottom: 15px;"></div>
+        <div class="wheel-container"><div class="wheel-bg"></div><div id="wheel-letters-layer"></div></div>
+        <button id="txt-clear" class="btn-main" style="background:var(--error); box-shadow: 0 6px 0 #b33939; width: 150px; margin-top: 20px;" onclick="clearSlots()">CLEAR ❌</button>
+
+        <div class="status-overlay" id="win-modal">
+            <h1 id="txt-correct" style="color:var(--success); font-size: 2.5rem;">EXCELLENT! 🌟</h1>
+            <p id="trivia-text" style="font-size:18px; margin: 20px 0;"></p>
+            <button id="txt-next" class="btn-main" onclick="handleNextLevel()">NEXT ➡️</button>
+        </div>
+
+        <div class="status-overlay" id="congrats-modal">
+            <h1 id="congrats-title" style="color:var(--primary); font-size: 36px;">🎉 CONGRATULATIONS!</h1>
+            <p id="final-msg" style="font-size: 22px; margin-bottom: 20px;"></p>
+            <div id="next-set-section">
+                <p id="txt-proceed" style="font-weight:bold;">Do you want to continue to Set 2?</p>
+                <button class="btn-main" onclick="startNextSet()">YES, LET'S GO! 💻</button>
+                <button class="btn-main" style="background:#636e72; box-shadow: 0 6px 0 #2d3436;" onclick="goBack()">HOME 🏠</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   const AudioEngine = {
+        ctx: null, musicInt: null, isMusicPlaying: false,
+        init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+        
+        playTone(f, t, d, v=1.0) {
+            if(!this.ctx || this.ctx.state === 'suspended') this.init();
+            if(!this.ctx) return;
+            const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+            o.type = t; o.frequency.setValueAtTime(f, this.ctx.currentTime);
+            g.gain.setValueAtTime(v, this.ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + d);
+            o.connect(g); g.connect(this.ctx.destination);
+            o.start(); o.stop(this.ctx.currentTime + d);
+        },
+        toggleMusic() {
+            this.init(); this.isMusicPlaying = !this.isMusicPlaying;
+            document.getElementById('music-btn').innerHTML = (this.isMusicPlaying ? "&#128266;" : "&#128263;");
+            if(this.isMusicPlaying) {
+                this.musicInt = setInterval(() => {
+                    const notes = [261.63, 329.63, 392.00, 523.25];
+                    this.playTone(notes[Math.floor(Math.random()*notes.length)], 'triangle', 0.6, 0.15);
+                }, 800);
+            } else { clearInterval(this.musicInt); }
+        }
+    };
+
+    function startLoadingProcess() {
+        let p = 0; const fill = document.getElementById('load-fill');
+        const i = setInterval(() => {
+            p += 1; fill.style.width = p + "%";
+            if (p >= 100) {
+                clearInterval(i);
+                document.getElementById('load-status').style.display = 'none';
+                document.getElementById('tap-msg').style.visibility = 'visible';
+                document.getElementById('tap-msg').onclick = () => { 
+                    try { AudioEngine.init(); } catch(e) {}
+                    document.getElementById('loader').style.display = 'none'; 
+                };
+            }
+        }, 30);
+    }
+
+    const wordsData = {
+        set1: [
+            { en:{w:"SCREEN", h:"______ time is using gadgets like phones.", t:"Screen time refers to device use."}, tl:{w:"SCREEN", h:"______ time ay ang oras sa paggamit ng gadgets.", t:"Ang screen time ay oras sa mga device."} },
+            { en:{w:"COMPUTER", h:"A ______ is a digital device for learning.", t:"Computers are tools for study."}, tl:{w:"COMPUTER", h:"Ang ______ ay gamit sa pag-aaral.", t:"Ang computer ay gamit sa pag-aaral."} },
+            { en:{w:"REST", h:"If eyes are tired, you should ______ them.", t:"Resting eyes prevents strain."}, tl:{w:"PAHINGA", h:"Nakatutulong ang ______  sa ating mga mata.", t:"Mahalaga ang pahinga."} },
+            { en:{w:"EYES", h:"Too much gadgets can hurt your ______.", t:"Protect your vision."}, tl:{w:"MATA", h:"Maaaring masaktan ang ating ______ sa sobrang pag gamit gadgets.", t:"Ingatan ang iyong mga mata."} },
+            { en:{w:"OUTSIDE", h:"Better to play ______ than gadgets.", t:"Playing outside is healthy."}, tl:{w:"LABAS", h:"Mas mabuting maglaro sa ______.", t:"Mainam ang maglaro sa labas."} },
+            { en:{w:"FAR", h:"According to the 20-20-20 rule, look at something ______.", t:"Looking far away helps the eyes relax."}, tl:{w:"MALAYO", h:"Ayon sa 20-20-20 rule, dapat tumingin sa ______ na bagay.", t:"Ang pagtingin sa malayo ay nagbibigay pahinga."} },
+            { en:{w:"PARENTS", h:"______ help manage screen time.", t:"Listen to your guardians."}, tl:{w:"MAGULANG", h:"Ang mga ______ ang gumagabay sa atin.", t:"Makinig sa payo ng magulang."} },
+            { en:{w:"AVOID", h:"______ gadgets before sleep.", t:"Avoid blue light at night."}, tl:{w:"IWASAN", h:"______ ang gadget bago matulog.", t:"Iwasan ang gadget bago matulog."} },
+            { en:{w:"BALANCED", h:"Having ______ screen time is good.", t:"Balance is key."}, tl:{w:"BALANSE", h:"Dapat ay ______ ang paggamit ng gadgets.", t:"Maging balanse sa paggamit."} },
+            { en:{w:"POSTURE", h:"Proper ______ prevents body pain.", t:"Sit up straight."}, tl:{w:"POSTURA", h:"Ang tamang ______ ay mahalaga para makaiwas sa sakit ng katawan.", t:"Ayusin ang upo habang nag-aaral."} }
+        ],
+        set2: [
+            { en:{w:"BREAK", h:"Regular ______ help prevent eye strain.", t:"Breaks relax the eyes."}, tl:{w:"PAHINGA", h:"Ang regular na ______ ay iwas-sakit sa mata.", t:"Mag-break para makapag-relax."} },
+            { en:{w:"LENGTH", h:"Sit an arm's ______ away from screens.", t:"Proper distance protects eyes."}, tl:{w:"BRASO", h:"Umupo nang kasing haba ng isang ______ mula sa screen.", t:"Tamang distansya para sa mata."} },
+            { en:{w:"DIGITAL", h:"______ wellness means safe tech use.", t:"Digital health is important."}, tl:{w:"DIGITAL", h:"Ang ______ health ay ligtas na paggamit ng teknolohiya.", t:"Mahalaga ang digital health."} },
+            { en:{w:"REST", h:"If eyes are tired, you should ______ them.", t:"Resting eyes prevents strain."}, tl:{w:"IPAHINGA", h:"Kapag napagod ang mata, dapat itong ______.", t:"Ang pagpapahinga ay mahalaga."} },
+            { en:{w:"EATING", h:"Do not use gadgets while ______.", t:"Gadgets distract us from eating."}, tl:{w:"KUMAKAIN", h:"Bawal ang gadget habang ______.", t:"Huwag mag-gadget habang kumakain."} },
+            { en:{w:"RESPONSIBLE", h:"Limits show ______ use of tech.", t:"Responsible users follow rules."}, tl:{w:"RESPONSABLE", h:"Ito ay ______ na paggamit ng teknolohiya.", t:"Maging responsable sa paggamit."} },
+            { en:{w:"SCREEN", h:"Limit ______ time to protect eyes.", t:"Too much screen time may harm our body."}, tl:{w:"SCREEN", h:"Limitahan ang ______ time para ma protektahan ang mata.", t:"Ang sobrang gadget ay masama sa katawan."} },
+            { en:{w:"CITIZEN", h:"Proper use shows good digital ______.", t:"Be a good digital citizen."}, tl:{w:"CITIZEN", h:"Nagpapakita ito ng mabuting ______.", t:"Maging mabuting digital citizen."} },
+            { en:{w:"HEALTHY", h:"Playing keeps the body ______.", t:"Physical activities are important."}, tl:{w:"MALUSOG", h:"Ang paglalaro ay para sa ______ na katawan.", t:"Mahalaga ang ehersisyo."} },
+            { en:{w:"PARENTS", h:"Follow limits set by ______.", t:"Adults guide us."}, tl:{w:"MAGULANG", h:"Sundin ang utos ng ______.", t:"Makinig sa mga nakatatanda."} }
+        ]
+    };
+
+    const translations = {
+        en: { back_btn: "⬅️ BACK", ready: "Are you ready?", play: "START GAME", dir_title: "📜 HOW TO PLAY", d1: "Read the hint carefully to know the word.", d2: "Tap the letters in the circle to spell it.", d3: "Finish before the battery bar runs out!", gotit: "GOT IT! 👍", profile: "👤 PLAYER", score_label: "SCORE: ", correct: "EXCELLENT! 🌟", next: "NEXT ➡️", clear: "CLEAR ❌", proceed: "Do you want to continue to Set 2?" },
+        tl: { back_btn: "⬅️ BUMALIK", ready: "Handa ka na ba?", play: "LARO NA!", dir_title: "📜 PAANO MAGLARO", d1: "Basahing mabuti ang hint para malaman ang salita.", d2: "Pindutin ang mga letra sa bilog para i-spell ito.", d3: "Tapusin bago maubos ang battery bar!", gotit: "NAKUHA KO! 👍", profile: "👤 PLAYER", score_label: "PUNTOS: ", correct: "ANG GALING! 🌟", next: "SUNOD ➡️", clear: "BURAHIN ❌", proceed: "Gusto mo bang magpatuloy sa Set 2?" }
+    };
+
+    let curLang = 'en', activeSet = 'set1', currentIdx = 0, score = 0, selected = "", timer, time = 10, pageHistory = ['page-intro'];
+    let set1Score = 0, set2Score = 0;
+
+    function changeLang(l) {
+        curLang = l;
+        document.getElementById('lang-en').classList.toggle('lang-active', l === 'en');
+        document.getElementById('lang-tl').classList.toggle('lang-active', l === 'tl');
+        document.getElementById('back-btn-text').innerText = translations[l].back_btn;
+        document.getElementById('txt-ready').innerText = translations[l].ready;
+        document.getElementById('txt-play').innerText = translations[l].play;
+        document.getElementById('txt-dir_title').innerText = translations[l].dir_title;
+        document.getElementById('txt-d1').innerText = translations[l].d1;
+        document.getElementById('txt-d2').innerText = translations[l].d2;
+        document.getElementById('txt-d3').innerText = translations[l].d3;
+        document.getElementById('txt-gotit').innerText = translations[l].gotit;
+        document.getElementById('txt-profile').innerText = translations[l].profile;
+        document.getElementById('txt-score_label').innerHTML = translations[l].score_label + `<span id="current-score">${score}</span>`;
+        document.getElementById('txt-correct').innerText = translations[l].correct;
+        document.getElementById('txt-next').innerText = translations[l].next;
+        document.getElementById('txt-clear').innerText = translations[l].clear;
+        document.getElementById('txt-proceed').innerText = translations[l].proceed;
+        if(document.getElementById('page-game').classList.contains('active')) renderLevel();
+    }
+
+    function navPage(id) { pageHistory.push(id); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+    
+    function goBack() { 
+        if(pageHistory.length > 1) { 
+            pageHistory.pop(); 
+            const prev = pageHistory[pageHistory.length - 1]; 
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+            document.getElementById(prev).classList.add('active'); 
+            clearInterval(timer); 
+            document.getElementById('congrats-modal').style.display='none'; 
+            document.getElementById('win-modal').style.display='none';
+        } 
+    }
+
+    function startGame(s) {
+        const name = document.getElementById('user-name').value.trim();
+        if(!name) { document.getElementById('login-error').style.visibility = "visible"; return; }
+        activeSet = 'set' + s; currentIdx = 0; score = 0;
+        document.getElementById('display-name').innerText = name.toUpperCase();
+        loadLevel(); navPage('page-game');
+    }
+
+    function loadLevel() { selected = ""; document.getElementById('win-modal').style.display = 'none'; document.getElementById('congrats-modal').style.display = 'none'; renderLevel(); resetTimer(); }
+    
+    function renderLevel() {
+        const data = wordsData[activeSet][currentIdx][curLang];
+        document.getElementById('hint').innerText = data.h;
+        document.getElementById('slots').innerHTML = data.w.split('').map(() => `<div class="slot"></div>`).join('');
+        const layer = document.getElementById('wheel-letters-layer'); layer.innerHTML = "";
+        const letters = data.w.split('').sort(() => Math.random() - 0.5);
+        letters.forEach((l, i) => {
+            const b = document.createElement('button'); b.className = 'letter-btn'; b.innerText = l;
+            const angle = (i / letters.length) * (Math.PI * 2) - (Math.PI / 2);
+            b.style.left = (140 + 95 * Math.cos(angle)) + "px"; b.style.top = (140 + 95 * Math.sin(angle)) + "px";
+            b.onclick = () => { AudioEngine.playTone(600, 'sine', 0.1); const slots = document.querySelectorAll('.slot'); for(let s of slots) { if(s.innerText === "") { s.innerText = l; selected += l; if(selected.length === data.w.length) checkAns(); break; } } };
+            layer.appendChild(b);
+        });
+    }
+
+    function checkAns() {
+        const data = wordsData[activeSet][currentIdx][curLang];
+        if(selected.toUpperCase() === data.w.toUpperCase()) {
+            clearInterval(timer); score += 5;
+            document.getElementById('current-score').innerText = score;
+            document.getElementById('trivia-text').innerText = data.t;
+            document.getElementById('win-modal').style.display = 'flex';
+            AudioEngine.playTone(800, 'square', 0.3);
+        } else { triggerWrong(); }
+    }
+
+    function triggerWrong() {
+        AudioEngine.playTone(150, 'sawtooth', 0.5);
+        document.getElementById('flash-overlay').classList.add('wrong-flash');
+        setTimeout(() => { document.getElementById('flash-overlay').classList.remove('wrong-flash'); handleNextLevel(); }, 500);
+    }
+
+    function handleNextLevel() { 
+        if(currentIdx < wordsData[activeSet].length - 1) { currentIdx++; loadLevel(); } 
+        else { showFinalCongrats(); } 
+    }
+
+    function showFinalCongrats() {
+        clearInterval(timer);
+        const modal = document.getElementById('congrats-modal');
+        const nextSec = document.getElementById('next-set-section');
+        modal.style.display = 'flex';
+        
+        if(activeSet === 'set1') {
+            set1Score = score;
+            document.getElementById('final-msg').innerText = "Set 1 Complete! Score: " + set1Score + "/50";
+            nextSec.style.display = 'block';
+        } else {
+            set2Score = score;
+            let grandTotal = set1Score + set2Score;
+            document.getElementById('congrats-title').innerText = "CONGRATULATIONS!";
+            document.getElementById('final-msg').innerHTML = 
+                `Set 1: ${set1Score}/50<br>` +
+                `Set 2: ${set2Score}/50<br><br>` +
+                `<strong style="font-size: 28px; color: var(--primary);">TOTAL SCORE: ${grandTotal}/100</strong>`;
+            nextSec.style.display = 'none';
+            setTimeout(() => { alert("Great Job! Returning Home."); goBack(); }, 6000);
+        }
+    }
+
+    function startNextSet() { activeSet = 'set2'; currentIdx = 0; score = 0; loadLevel(); }
+    function clearSlots() { AudioEngine.playTone(300, 'sine', 0.1); selected = ""; document.querySelectorAll('.slot').forEach(s => s.innerText = ""); }
+    function resetTimer() { clearInterval(timer); time = 10; timer = setInterval(() => { time -= 0.1; document.getElementById('battery-fill').style.width = (time*10) + "%"; if(time <= 0) triggerWrong(); }, 100); }
+</script>
+</body>
+</html>

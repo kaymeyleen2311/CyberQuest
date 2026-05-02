@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Hero Hub</title>
+     
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#7e22ce">
+ 
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+ 
+  <style>
+/* --- OFFLINE TAILWIND REPLACEMENTS --- */
+    .h-full { height: 100%; }
+    .w-full { width: 100%; }
+    .w-72 { width: 18rem; }
+    .w-20 { width: 5rem; }
+    .h-3 { height: 0.75rem; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .flex-1 { flex: 1 1 0%; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .text-center { text-align: center; }
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    @media (min-width: 768px) { .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1024px) { .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    
+    /* GAP: Ginawa kong 4rem para hindi magkakalapit ang boxes gaya ng gusto mo */
+    .gap-10 { gap: 4rem; } 
+    
+    /* MAX-WIDTH: Ginawa kong 80rem para mas malapad ang container */
+    .max-w-6xl { max-width: 80rem; margin-left: auto; margin-right: auto; }
+    
+    .p-6 { padding: 1.5rem; }
+    .p-12 { padding: 3rem; }
+    .pb-24 { padding-bottom: 6rem; }
+    .py-3 { padding: 0.75rem 0; }
+    .py-4 { padding: 1rem 0; }
+    .px-4 { padding: 0 1rem; }
+    .px-12 { padding: 0 3rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-12 { margin-bottom: 3rem; }
+    .mt-8 { margin-top: 2rem; }
+    .mt-20 { margin-top: 5rem; }
+    .text-white { color: white; }
+    .text-yellow-300 { color: #fde047; }
+    .text-blue-900 { color: #1e3a8a; }
+    .text-green-900 { color: #14532d; }
+    .text-purple-900 { color: #581c87; }
+    .text-pink-900 { color: #831843; }
+    .text-yellow-900 { color: #713f12; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-7xl { font-size: 4.5rem; }
+    .text-8xl { font-size: 6rem; }
+    @media (min-width: 768px) { .md\:text-9xl { font-size: 8rem; } }
+    .font-black { font-weight: 900; }
+    .font-bold { font-weight: 700; }
+    .uppercase { text-transform: uppercase; }
+    .rounded-full { border-radius: 9999px; }
+    .bg-white { background-color: white; }
+    .bg-black\/30 { background-color: rgba(0,0,0,0.3); }
+    .bg-white\/10 { background-color: rgba(255,255,255,0.1); }
+    .border { border: 1px solid currentColor; }
+    .border-4 { border: 4px solid currentColor; }
+    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .overflow-hidden { overflow: hidden; }
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+body { box-sizing: border-box; user-select: none; margin: 0; font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; overflow-x: hidden; }
+
+
+    /* --- FLOATING DIGITAL ICONS --- */
+    .decor { position: fixed; pointer-events: none; z-index: -1; opacity: 0.3; color: white; filter: drop-shadow(0 0 10px white); animation: drift 10s infinite ease-in-out; font-size: 2.5rem; }
+    @keyframes drift {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(40px, -60px) rotate(15deg); }
+        66% { transform: translate(-30px, 50px) rotate(-15deg); }
+    }
+
+
+    /* --- EMOJI ANIMATIONS --- */
+    @keyframes dice-roll {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(90deg) scale(1.2); }
+      50% { transform: rotate(180deg) scale(1); }
+      75% { transform: rotate(270deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    .icon-dice { display: inline-block; animation: dice-roll 3s infinite ease-in-out; }
+
+
+    .balloon-container { display: inline-block; width: 100px; height: 120px; position: relative; }
+    .balloon-red {
+        fill: #ef4444;
+        transform-origin: 50% 50%;
+        animation: balloon-burst 3s infinite;
+    }
+    .balloon-string {
+        stroke: white; stroke-width: 2; fill: none;
+        animation: string-sway 3s infinite;
+        transform-origin: 50% 0%;
+    }
+    .pop-effect {
+        fill: white; opacity: 0;
+        transform-origin: 50% 40%;
+        animation: pop-flash 3s infinite;
+    }
+
+
+    @keyframes balloon-burst {
+        0%, 70% { transform: scale(1); opacity: 1; }
+        75% { transform: scale(1.2); opacity: 1; }
+        77% { transform: scale(0); opacity: 0; }
+        95% { opacity: 0; transform: scale(0); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pop-flash {
+        0%, 76% { opacity: 0; transform: scale(0.5); }
+        77% { opacity: 1; transform: scale(1.2); }
+        80% { opacity: 0; transform: scale(1.5); }
+    }
+    @keyframes string-sway {
+        0%, 100% { transform: rotate(-5deg) translateY(0); }
+        50% { transform: rotate(5deg) translateY(-5px); }
+        77% { transform: rotate(0deg) translateY(5px); }
+    }
+
+
+    @keyframes shield-pulse {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.2); filter: brightness(1.5) drop-shadow(0 0 20px #fff); }
+    }
+    .icon-shield { display: inline-block; animation: shield-pulse 2s infinite ease-in-out; }
+
+
+    @keyframes wheel-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .icon-wheel { display: inline-block; animation: wheel-spin 4s infinite linear; }
+
+
+    @keyframes eyes-blink {
+      0%, 45%, 55%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.1); }
+    }
+    .icon-eyes { display: inline-block; animation: eyes-blink 3.5s infinite; }
+
+
+    /* --- UI DESIGN --- */
+    .fixed-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(135deg, #1e3a8a, #7e22ce, #be185d);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite; z-index: -2;
+    }
+    @keyframes gradientBG { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+
+    .game-card {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(15px);
+        border: 4px solid rgba(255,255,255,0.2);
+        border-radius: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .game-card:hover { transform: translateY(-15px) scale(1.02); background: rgba(255,255,255,0.2); border-color: white; }
+   
+    .ui-btn { position:fixed; z-index:100; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white; cursor:pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    #soundToggle { top:1rem; right:1rem; width:60px; height:60px; }
+    #aboutToggle { top:1rem; left:1rem; width:60px; height:60px; font-weight: bold; color: white; font-size: 1.5rem; }
+   
+    .lang-container {
+        position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%);
+        z-index: 100; display: flex;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(15px);
+        padding: 6px; border-radius: 1.5rem;
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+    .lang-btn {
+        color: white; padding: 10px 24px;
+        border-radius: 1.2rem;
+        font-weight: 700; cursor: pointer;
+        transition: all 0.3s ease; border: none;
+       font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+        background: transparent;
+    }
+    #langToggle .lang-btn.active { background: white !important; color: #7e22ce !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+   
+    .hidden-ui { opacity: 0; visibility: hidden; pointer-events: none; }
+
+
+    #loading-screen { position: fixed; inset: 0; background: #0f172a; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .power-icon { font-size: 5rem; animation: pulse 1s infinite alternate; }
+    @keyframes pulse { from { opacity: 0.5; transform: scale(1); } to { opacity: 1; transform: scale(1.2); } }
+
+
+    #about-sidebar {
+        position: fixed; top: 0; left: 0; height: 100%;
+        width: 480px; max-width: 90%;
+        background: white; z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border-right: 8px solid #7e22ce;
+        overflow-y: auto;
+    }
+    #about-sidebar.open { transform: translateX(0); }
+    #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 140; display: none; backdrop-filter: blur(4px); }
+  </style>
+</head>
+<body class="h-full">
+
+
+ <div class="decor" style="top:10%; left:5%; animation-delay: 0s;">⚡️</div>
+ <div class="decor" style="top:25%; right:8%; animation-delay: -2.5s;">🌐</div>
+ <div class="decor" style="bottom:15%; left:12%; animation-delay: -4s;">☁️</div>
+ <div class="decor" style="bottom:10%; right:6%; animation-delay: -6.5s;">📱</div>
+ <div class="decor" style="top:50%; left:3%; animation-delay: -1.2s;">🖱️</div>
+ <div class="decor" style="top:8%; right:35%; animation-delay: -3.8s;">📶</div>
+ <div class="decor" style="bottom:35%; right:4%; animation-delay: -5.2s;">🔋</div>
+
+
+ <div id="loading-screen">
+     <div class="power-icon mb-6">⚡️</div>
+     <h2 class="text-white font-bold tracking-[0.3em] mb-4 text-xl uppercase" style="font-family:'Space Grotesk'">System Starting...</h2>
+     <div class="w-72 h-3 bg-white/10 rounded-full overflow-hidden border border-white/20">
+         <div id="loader-bar" class="h-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 w-0 transition-all duration-300"></div>
+     </div>
+ </div>
+
+
+ <div class="fixed-bg"></div>
+
+
+ <button id="aboutToggle" class="ui-btn" onclick="toggleAbout()">i</button>
+ 
+ <div id="langToggle" class="lang-container">
+  <button onclick="setLanguage('en')" id="btn-en" class="lang-btn">ENGLISH</button>
+  <button onclick="setLanguage('tl')" id="btn-tl" class="lang-btn">TAGALOG</button>
+ </div>
+
+
+ <button id="soundToggle" class="ui-btn" title="Toggle Music">
+     <span id="soundIcon">🔊</span>
+ </button>
+
+
+ <div id="sidebar-overlay" onclick="toggleAbout()"></div>
+ <div id="about-sidebar" class="flex flex-col shadow-2xl">
+    <div class="w-full relative">
+        <button onclick="toggleAbout()" class="absolute top-4 right-4 z-10 bg-red-600 text-white font-bold w-10 h-10 rounded-full shadow-lg">✕</button>
+        <div class="p-8 pb-4">
+            <h2 id="about-title" class="text-4xl font-black text-purple-800 uppercase" style="font-family:'Space Grotesk'">Meet the Creators!</h2>
+        </div>
+        <div class="w-full bg-gray-200">                
+            <img src="TheTeam.png" alt="The Creators" class="w-full h-auto block border-b-8 border-purple-600 border-t-8">
+        </div>
+    </div>
+
+
+    <div class="p-8 space-y-6 flex-1">
+        <div class="text-gray-700 space-y-4 text-lg font-medium leading-relaxed">
+          <p id="about-p1" class="bg-yellow-100 p-5 rounded-3xl border-l-8 border-yellow-500">
+            <b>Hello, Digital Hero!</b> We created this Game Hub to help you stay safe and smart in the online world.
+          </p>
+          <p id="about-p2">We developed these games to make learning about digital citizenship and taking care of your health while using gadgets fun.</p>
+         
+          <div class="bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-6 rounded-[2.5rem] shadow-xl">
+              <h4 id="about-goal-title" class="font-bold text-xl mb-2">Our Goal:</h4>
+              <p id="about-goal-text" class="text-sm opacity-90">To inspire and teach kids like you to use technology in a healthy, safe, and respectful way! 🚀</p>
+          </div>
+        </div>
+
+
+        <!-- MENTOR CARD SECTION AT THE BOTTOM OF CONTENT -->
+        <div class="mt-8 border-t-4 border-dashed border-gray-100 pt-8">
+            <div class="bg-white border-4 border-purple-600 rounded-[2rem] p-6 shadow-lg relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 text-6xl opacity-5 grayscale rotate-12">🎓</div>
+                <h5 id="about-adviser-label" class="text-purple-600 font-bold tracking-widest text-[10px] uppercase mb-1">MENTORED BY</h5>
+                <p class="text-2xl font-black text-gray-800 leading-tight">DR. MARIA ERLEEN R. LUCIANO</p>
+                <div class="flex gap-1 mt-3">
+                    <div class="h-1.5 w-12 bg-purple-600 rounded-full"></div>
+                    <div class="h-1.5 w-4 bg-yellow-400 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+
+
+ <div id="app" class="app-wrapper w-full h-full flex flex-col overflow-auto relative">
+   <div id="main-menu" class="min-h-full flex flex-col p-6">
+     <div class="text-center mb-12 mt-20">
+       <h1 class="text-7xl md:text-9xl font-black text-white mb-4" style="font-family:'Space Grotesk'; text-shadow: 0 10px 20px rgba(0,0,0,0.3);">GAME HUB</h1>
+       <p id="music-instruction" class="text-2xl text-yellow-300 font-bold tracking-[0.2em] bg-black/30 inline-block px-12 py-3 rounded-full border-4 border-yellow-300/40 uppercase">Click anywhere to start music</p>
+     </div>
+
+
+     <div class="flex-1 flex items-center justify-center pb-24">
+       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl w-full px-4">
+         <div class="game-card p-12 text-center" onclick="loadGame(1)">
+           <div class="text-8xl mb-6 icon-dice">🎲</div>
+           <h3 class="text-3xl font-black text-white uppercase tracking-tighter">Board-band</h3>
+           <div class="mt-8 bg-white text-blue-900 rounded-full py-4 font-black text-xl shadow-lg">ENTER</div>
+         </div>
+         <div class="game-card p-12 text-center" onclick="loadGame(2)">
+           <div class="mb-6 flex justify-center">
+             <svg class="balloon-container" viewBox="0 0 100 150">
+                <path class="balloon-string" d="M50 80 Q 40 100 50 120 T 50 145" />
+                <ellipse class="balloon-red" cx="50" cy="45" rx="35" ry="42" />
+                <path class="pop-effect" d="M50 20 L55 10 M70 30 L80 25 M70 60 L80 65 M50 75 L55 85 M30 60 L20 65 M30 30 L20 25" stroke="white" stroke-width="3" stroke-linecap="round"/>
+             </svg>
+           </div>
+           <h3 class="text-3xl font-black text-white uppercase tracking-tighter">Balloon Safety Pop</h3>
+           <div class="mt-8 bg-white text-green-900 rounded-full py-4 font-black text-xl shadow-lg">ENTER</div>
+         </div>
+         <div class="game-card p-12 text-center" onclick="loadGame(3)">
+           <div class="text-8xl mb-6 icon-shield">🛡️</div>
+           <h3 class="text-3xl font-black text-white uppercase tracking-tighter">Spine-Guard</h3>
+           <div class="mt-8 bg-white text-purple-900 rounded-full py-4 font-black text-xl shadow-lg">ENTER</div>
+         </div>
+         <div class="game-card p-12 text-center" onclick="loadGame(4)">
+           <div class="text-8xl mb-6 icon-wheel">🛞</div>
+           <h3 class="text-3xl font-black text-white uppercase tracking-tighter">Screen Quest</h3>
+           <div class="mt-8 bg-white text-pink-900 rounded-full py-4 font-black text-xl shadow-lg">ENTER</div>
+         </div>
+         <div class="game-card p-12 text-center" onclick="loadGame(5)">
+           <div class="text-8xl mb-6 icon-eyes">👀</div>
+           <h3 class="text-3xl font-black text-white uppercase tracking-tighter">Eye-dentify</h3>
+           <div class="mt-8 bg-white text-yellow-900 rounded-full py-4 font-black text-xl shadow-lg">ENTER</div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+
+   <div id="game-screen" class="hidden w-full h-full flex flex-col bg-white absolute top-0 left-0 z-50">
+     <div class="bg-gray-900 border-b-4 border-white/20 px-6 py-5 flex items-center justify-between">
+       <button onclick="backToMenu()" class="bg-red-600 text-white font-black py-2 px-10 rounded-full border-2 border-red-400 shadow-lg active:scale-95 hover:brightness-125 transition-all uppercase">Exit Mission</button>
+       <h2 id="current-game-title" class="text-white font-black text-2xl uppercase tracking-widest">Loading...</h2>
+       <div class="w-20"></div>
+     </div>
+     <div id="game-content" class="flex-1 w-full overflow-hidden bg-white"></div>
+   </div>
+ </div>
+
+
+ <script>
+   const translations = {
+       en: {
+           musicNote: "Click anywhere to start music",
+           aboutTitle: "Meet the Creators!",
+           aboutP1: "<b>Hello, Digital Hero!</b> We created this Game Hub to help you stay safe and smart in the online world.",
+           aboutP2: "We developed these games to make learning about digital citizenship and taking care of your health while using gadgets fun.",
+           aboutAdviser: "MENTORED BY",
+           aboutGoalTitle: "Our Goal:",
+           aboutGoalText: "To inspire and teach kids like you to use technology in a healthy, safe, and respectful way! 🚀"
+       },
+       tl: {
+           musicNote: "I-click kahit saan para magsimula ang musika",
+           aboutTitle: "Kilalanin ang mga may likha!",
+           aboutP1: "<b>Kumusta, Digital Hero! </b> Kami ang mga gumawa ng Game Hub na ito para matulungan kang maging ligtas at matalino sa online world.",
+           aboutP2: "Binuo namin ang mga larong ito para maging masaya ang iyong pag-aaral tungkol sa digital citizenship at pangangalaga sa iyong kalusugan habang gumagamit ng gadgets.",
+           aboutAdviser: "GINABAYAN NI",
+           aboutGoalTitle: "Ang aming layunin:",
+           aboutGoalText: "Upang magbigay inspirasyon at turuan ang batang kagaya mo na gumamit ng teknolohiya sa wasto, ligtas, at may paggalang na paraan! 🚀"
+       }
+   };
+
+
+   function setLanguage(lang) {
+       const t = translations[lang];
+       document.getElementById('music-instruction').innerText = t.musicNote;
+       document.getElementById('about-title').innerText = t.aboutTitle;
+       document.getElementById('about-p1').innerHTML = t.aboutP1;
+       document.getElementById('about-p2').innerText = t.aboutP2;
+       document.getElementById('about-adviser-label').innerText = t.aboutAdviser;
+       document.getElementById('about-goal-title').innerText = t.aboutGoalTitle;
+       document.getElementById('about-goal-text').innerText = t.aboutGoalText;
+
+
+       // Shade transfer fix
+       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+       document.getElementById('btn-' + lang).classList.add('active');
+
+
+       AudioController.playTone(800, 0.05, 0.1);
+   }
+
+
+   window.addEventListener('DOMContentLoaded', () => {
+     let progress = 0;
+     const bar = document.getElementById('loader-bar');
+     const interval = setInterval(() => {
+         progress += Math.random() * 15;
+         if (progress >= 100) {
+             progress = 100;
+             clearInterval(interval);
+             setTimeout(() => {
+                 const loader = document.getElementById('loading-screen');
+                 loader.style.opacity = '0';
+                 loader.style.transition = 'opacity 0.6s ease';
+                 setTimeout(() => loader.remove(), 600);
+             }, 600);
+         }
+         bar.style.width = progress + '%';
+     }, 120);
+   });
+
+
+   function toggleAbout() {
+     const sidebar = document.getElementById('about-sidebar');
+     const overlay = document.getElementById('sidebar-overlay');
+     if (sidebar.classList.contains('open')) {
+         sidebar.classList.remove('open');
+         overlay.style.display = 'none';
+     } else {
+         sidebar.classList.add('open');
+         overlay.style.display = 'block';
+         AudioController.playTone(600, 0.1, 0.2);
+     }
+   }
+
+
+   const AudioController = {
+     ctx: null, isMuted: false, isPlaying: false, step: 0, intervalId: null,
+     bass: [261, 0, 261, 329, 392, 0, 392, 349],
+     lead: [523, 523, 659, 783, 1046, 783, 659, 698],
+     init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+     playTone(freq, duration, vol, type='square') {
+       if (this.isMuted || !this.ctx || freq === 0) return;
+       this.ctx.resume();
+       const osc = this.ctx.createOscillator();
+       const gain = this.ctx.createGain();
+       osc.type = type; osc.frequency.value = freq;
+       osc.connect(gain); gain.connect(this.ctx.destination);
+       gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+       gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+       osc.start(); osc.stop(this.ctx.currentTime + duration);
+     },
+     startBGM() {
+       if (this.isPlaying || this.isMuted) return;
+       this.isPlaying = true;
+       this.intervalId = setInterval(() => {
+         const b = this.bass[this.step % this.bass.length];
+         const l = this.lead[this.step % this.lead.length];
+         this.playTone(b, 0.4, 0.1, 'triangle');
+         if (this.step % 2 === 0) this.playTone(l, 0.2, 0.05, 'square');
+         this.step++;
+       }, 165);
+     },
+     stopBGM() { this.isPlaying = false; clearInterval(this.intervalId); this.intervalId = null; },
+     toggle() {
+       this.init();
+       this.isMuted = !this.isMuted;
+       document.getElementById('soundIcon').innerText = this.isMuted ? '🔇' : '🔊';
+       this.isMuted ? this.stopBGM() : this.startBGM();
+     }
+   };
+
+
+   window.addEventListener('click', () => {
+     AudioController.init();
+     if (!document.getElementById('main-menu').classList.contains('hidden')) {
+       AudioController.startBGM();
+     }
+   }, { once: true });
+
+
+  function loadGame(num) {
+     AudioController.stopBGM();
+     document.getElementById('soundToggle').classList.add('hidden-ui');
+     document.getElementById('aboutToggle').classList.add('hidden-ui');
+     document.getElementById('langToggle').classList.add('hidden-ui');
+     const titles = ["Board-band", "Balloon Safety Pop", "Spine Guard", "Screen Quest", "Eye-dentify"];
+     const icons = ["🎲", "🎈", "🛡️", "🛞", "👀"];
+     const animClasses = ["icon-dice", "icon-balloon", "icon-shield", "icon-wheel", "icon-eyes"];
+     document.getElementById('current-game-title').innerText = titles[num-1];
+     const content = document.getElementById('game-content');
+     content.innerHTML = `
+        <div class="h-full flex flex-col items-center justify-center bg-gray-900">
+            <div class="text-9xl ${animClasses[num-1]} mb-8">${icons[num-1]}</div>
+            <h2 class="text-white text-3xl font-black animate-pulse uppercase">CONNECTING TO MISSION...</h2>
+        </div>`;
+     setTimeout(() => {
+         content.innerHTML = '';
+         const iframe = document.createElement('iframe');
+         iframe.style.width = '100%'; iframe.style.height = '100%'; iframe.style.border = 'none';
+         iframe.src = `game${num}.html`;
+         content.appendChild(iframe);
+     }, 1500);
+     document.getElementById('main-menu').classList.add('hidden');
+     document.getElementById('game-screen').classList.remove('hidden');
+   }
+   
+   function backToMenu() {
+     if (!AudioController.isMuted) AudioController.startBGM();
+     document.getElementById('soundToggle').classList.remove('hidden-ui');
+     document.getElementById('aboutToggle').classList.remove('hidden-ui');
+     document.getElementById('langToggle').classList.remove('hidden-ui');
+     document.getElementById('game-screen').classList.add('hidden');
+     document.getElementById('main-menu').classList.remove('hidden');
+     document.getElementById('game-content').innerHTML = '';
+   }
+
+
+   document.getElementById('soundToggle').onclick = () => AudioController.toggle();
+ 
+   if ('serviceWorker' in navigator) {
+     window.addEventListener('load', () => {
+       navigator.serviceWorker.register('sw.js')
+         .then(reg => console.log('Service Worker Active! 🚀'))
+         .catch(err => console.log('Service Worker Error ❌', err));
+     });
+   }
+ 
+   setLanguage('en');
+ </script>
+</body>
+</html>
