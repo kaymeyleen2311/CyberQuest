@@ -1,8 +1,7 @@
-const CACHE_NAME = 'hero-hub-v110'; // Taasan mo lagi ang version pag nag-update ka
+const CACHE_NAME = 'hero-hub-v110'; 
 const assets = [
   './',
   './index.html',
-  './tailwind.js', // Dapat sakto ang pangalan dito
   './manifest.json',
   './TheTeam.png',
   './game1.html',
@@ -29,7 +28,7 @@ self.addEventListener('activate', e => {
   );
 });
 
-// Eto ang magpapatakbo sa JS mo kahit offline forever
+
 self.addEventListener('fetch', e => {
   e.respondWith(
     caches.match(e.request).then(response => {
