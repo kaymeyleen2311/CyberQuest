@@ -19,7 +19,7 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* --- LOADING SCREEN --- */
+       
         #loading-screen {
             position: fixed; inset: 0; background: white;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -34,7 +34,7 @@
         #tap-to-start { display: none; margin-top: 20px; cursor: pointer; background: var(--pastel-pink); color: white; padding: 10px 25px; border-radius: 20px; font-weight: bold; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* --- UI CONTROLS --- */
+     
         .ui-btn {
             position: fixed; top: 20px; width: 45px; height: 45px;
             border-radius: 50%; background: rgba(255,255,255,0.9); border: none;
@@ -45,7 +45,7 @@
         #back-btn { left: 20px; }
         #music-btn { right: 20px; }
 
-        /* TINAASAN ANG Z-INDEX PARA NASA IBABAW NG TANONG */
+      
         .lang-switcher {
             position: fixed; top: 20px; left: 80px; 
             display: none; background: rgba(255, 255, 255, 0.9);
@@ -57,7 +57,7 @@
         .lang-opt { padding: 6px 14px; font-size: 12px; font-weight: 700; cursor: pointer; border-radius: 20px; transition: 0.2s; color: #777; }
         .lang-opt.active { background: var(--pastel-pink); color: white; box-shadow: 0 2px 8px rgba(224, 122, 130, 0.3); }
 
-        /* --- SCREENS --- */
+       
         #rules-screen, #lobby, #winner-screen {
             position: fixed; inset: 0; 
             background: linear-gradient(135deg, var(--pastel-blue), #ffffff);
@@ -182,7 +182,7 @@
     </div>
 
 <script>
-   // --- OFFLINE AUDIO ENGINE (BOOSTED VOLUME) ---
+  
     const AudioSystem = {
         ctx: null, musicInt: null,
         init() { if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); if(this.ctx.state==='suspended') this.ctx.resume(); },
@@ -275,7 +275,7 @@
         document.getElementById('txt-r3').innerHTML = t.r3;
         document.getElementById('tap-to-start').innerText = t.tap;
         
-        // LIVE TRANSLATION IF QUIZ IS OPEN
+       
         if (activeQuestionData) {
             const quiz = activeQuestionData[currentLang];
             document.getElementById('q-text').innerText = quiz.q;
@@ -292,7 +292,7 @@
                    fb.innerHTML = `${i18n[currentLang].wrong} ${quiz.c[activeQuestionData[currentLang].r]}<br><span class="explanation-text">${quiz.e}</span>`;
                }
             }
-        } // <--- THIS BRACKET WAS MISSING
+        }
         if (players.length > 0) updateUI();
     }
     function startApp() {
@@ -371,19 +371,19 @@
         else { AudioSystem.playFail(); fb.innerHTML = `${i18n[currentLang].wrong} ${quiz.c[quiz.r]}<br><span class="explanation-text">${quiz.e}</span>`; fb.style.color="red"; }
         document.getElementById('next-btn').style.display = 'inline-block';
     }
-// FIX: This function runs when you click "Continue"
+
     function closeQuiz() {
         // Hide the quiz card
         document.getElementById('quiz-overlay').style.display = 'none';
         activeQuestionData = null;
         
-        // Remove one balloon from the count
+       
         balloonsLeft--;
 
         if (balloonsLeft <= 0) {
             endGame();
         } else {
-            // Switch turns if playing with 2 people
+           
             if (players.length > 1) {
                 currentPlayer = (currentPlayer === 0) ? 1 : 0;
             }
@@ -391,7 +391,7 @@
         }
     }
 
-    // FIX: This function handles the Bonus (+5) and Oops (-5) balloons
+  
     function showFeedback(msg, isBonus) {
         if (isBonus) {
             AudioSystem.playCorrect();
@@ -403,7 +403,7 @@
             if (scores[currentPlayer] < 0) scores[currentPlayer] = 0;
         }
         
-        // Show the message (Bonus/Oops)
+      
         alert(msg);
 
         balloonsLeft--;
@@ -419,7 +419,7 @@
     function updateUI() {
         const lang = i18n[currentLang];
         const nameToShow = players[currentPlayer] || "Player";
-        // FIXED: Nilagyan ng backticks
+      
         document.getElementById('turn-display').innerText = `🎈 ${lang.turn}: ${nameToShow}`;
         document.getElementById('score-p1').innerText = `${players[0]}: ${scores[0]}`;
         if(players[1]) document.getElementById('score-p2').innerText = `${players[1]}: ${scores[1]}`;
@@ -434,7 +434,7 @@
             else title = lang.draw;
         }
         document.getElementById('winner-title').innerText = title;
-        // FIXED: Nilagyan ng backticks
+       
         document.getElementById('winner-score').innerText = `${scores[0]} - ${scores[1]}`;
         confetti({ particleCount: 200, spread: 100 });
     }
@@ -448,7 +448,7 @@
         const winner = document.getElementById('winner-screen');
         const quizOverlay = document.getElementById('quiz-overlay');
 
-        // 1. If we are in the middle of a live game
+       
         if (gameField.style.display === 'block') {
             const msg = currentLang === 'en' ? "Quit current game?" : "Ihinto ang laro?";
             if (confirm(msg)) {
@@ -459,17 +459,17 @@
                 lobby.style.display = 'flex';
             }
         } 
-        // 2. If we are in the Lobby (Name entry)
+      
         else if (lobby.style.display === 'flex') {
             lobby.style.display = 'none';
             rules.style.display = 'flex';
         } 
-        // 3. If we are in the Winner screen
+      
         else if (winner.style.display === 'flex') {
             winner.style.display = 'none';
             lobby.style.display = 'flex';
         } 
-        // 4. If we are on the Rules screen, go back to the browser's previous page
+       
         else {
             window.history.back();
         }
