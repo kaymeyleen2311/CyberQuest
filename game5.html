@@ -129,7 +129,7 @@
          align-items: center;
      }
 
-     /* Separate Pill Style for Back Button */
+     
      .nav-btn {
          background: rgba(255, 255, 255, 0.2);
          backdrop-filter: blur(5px);
@@ -144,7 +144,7 @@
          font-size: 0.8rem;
      }
 
-     /* The Unified Box for Languages */
+   
      
      .lang-group {
          display: flex;
@@ -155,7 +155,7 @@
          overflow: hidden;
      }
 
-     /* Buttons inside the Language Box */
+    
      .lang-btn {
          background: transparent;
          border: none;
@@ -167,18 +167,18 @@
          font-size: 0.8rem;
      }
 
-     /* Rounding just the LEFT side of English */
+  
      .lang-group button:first-child {
          border-radius: 10px 0 0 10px;
      }
 
-     /* Rounding just the RIGHT side of Tagalog */
+    
      .lang-group button:last-child {
          border-radius: 0 10px 10px 0;
          border-left: 1px solid rgba(255, 255, 255, 0.2); /* Divider line */
      }
 
-     /* Active highlight */
+  
      .lang-active {
          background: rgba(34, 211, 238, 0.5) !important;
      }
@@ -201,14 +201,14 @@
  <button id="soundToggle" class="sound-toggle"><span id="soundIcon">🔊</span></button>
 
  <div id="app" class="w-full h-full flex flex-col overflow-y-auto">
-   <!-- LOADING SCREEN -->
+   <!-- LOADING SCREENCH -->
    <div id="loading-screen" class="flex flex-col items-center justify-center min-h-full p-6">
     <div class="text-8xl mb-6 float">👁️</div>
     <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 mb-8 text-center" data-i18n="game_title">Eye Care Memory Match</h1>
     <p class="text-white text-xl" data-i18n="loading">Loading game...</p>
    </div>
 
-   <!-- RULES SCREEN -->
+   <!-- RULES SCREENCH -->
    <div id="rules-screen" class="hidden flex flex-col items-center justify-center min-h-full p-4 md:p-6">
     <div class="max-w-3xl w-full">
      <div class="text-center mb-2">
@@ -228,7 +228,7 @@
     </div>
    </div>
 
-   <!-- NAME SCREEN -->
+   <!-- NAME SCREENCH -->
    <div id="name-screen" class="hidden flex flex-col items-center justify-center min-h-full p-4 md:p-6">
      <div class="max-w-md w-full">
        <div class="text-center mb-6">
@@ -249,7 +249,7 @@
      </div>
    </div>
 
-  <!-- GAME SCREEN -->
+  <!-- GAME SCREENCH -->
    <div id="game-screen" class="hidden flex flex-col h-full p-2 pt-24">
     <div class="flex justify-between items-center mb-2 px-2 text-xs text-white">
       <div>Player: <span id="player-display" class="text-cyan-300 font-bold"></span></div>
@@ -275,7 +275,7 @@
     </div>
    </div>
 
-   <!-- WIN SCREEN -->
+   
    <div id="win-screen" class="hidden flex flex-col items-center justify-center min-h-full p-6 text-center">
     <div class="text-8xl mb-4 bounce">🏆</div>
     <h1 class="text-4xl font-black text-yellow-300 mb-2" data-i18n="win_title">AMAZING!</h1>
@@ -293,7 +293,7 @@
     </div>
    </div>
 
-  <!-- GAME OVER SCREEN -->
+
    <div id="gameover-screen" class="hidden flex flex-col items-center justify-center min-h-full p-6 text-center">
     <div class="text-8xl mb-4">⏰</div>
     <h1 class="text-4xl font-black text-red-400 mb-2" data-i18n="go_title">Time's Up!</h1>
@@ -307,7 +307,7 @@
  </div>
 <script>
      /**
-      * TRANSLATION SYSTEM
+      * TRANSLATION SYSTEMCH
       */
      const i18n = {
         en: {
@@ -555,7 +555,7 @@
      };
 
     const allPairs = [
-       // --- EASY (3 Pairs: 0, 1, 2) ---
+      
        { 
          good: { icon: "📏", text: { en: "Safe Distance", tl: "Tamang Distansya" } }, 
          bad: { icon: "👓", text: { en: "Too Close", tl: "Masyadong Malapit" } }, 
@@ -572,7 +572,7 @@
          fact: { en: "Proper room lighting reduces the contrast between the screen and surroundings.", tl: "Ang tamang ilaw sa silid ay nagpapababa ng pagkapagod ng mata mula sa liwanag ng screen." } 
        },
 
-       // --- MODERATE (4 Pairs: 3, 4, 5, 6) ---
+    
        { 
          good: { icon: "🕰️", text: { en: "20-20-20 Rule", tl: "Rule na 20-20-20" } }, 
          bad: { icon: "⏳", text: { en: "Long Screen Time", tl: "Matagal na Screen Time" } }, 
@@ -594,7 +594,7 @@
          fact: { en: "Avoiding gadgets before sleep helps your brain produce melatonin for better rest.", tl: "Ang pag-iwas sa gadgets bago matulog ay tumutulong sa utak na makapagpahinga nang maayos." } 
        },
 
-       // --- HARD (5 Pairs: 7, 8, 9, 10, 11) ---
+       
        { 
          good: { icon: "🌳", text: { en: "Outdoor Balance", tl: "Oras sa Labas" } }, 
          bad: { icon: "📺", text: { en: "Excessive Screen Time", tl: "Sobra sa Screen Time" } }, 
@@ -646,13 +646,13 @@
        AudioController.playClick();
        selectedDifficulty = diff;
 
-       // Tanggalin ang highlight sa lahat ng buttons
+     
        ['diff-easy', 'diff-medium', 'diff-hard'].forEach(id => {
          const el = document.getElementById(id);
          el.classList.remove('ring-4', 'ring-white', 'scale-105', 'shadow-2xl');
        });
 
-       // Idagdag ang highlight (ring) sa napiling button
+  
        const selectedEl = document.getElementById(`diff-${diff}`);
        selectedEl.classList.add('ring-4', 'ring-white', 'scale-105', 'shadow-2xl');
      }
@@ -669,7 +669,7 @@
         document.getElementById('info-panel').classList.add('hidden');
         clearInterval(timerInterval);
 
-        // I-STOP ANG COUNTDOWN KUNG MERON MAN
+     
         if (countdownInterval) clearInterval(countdownInterval);
         if (startTimeout) clearTimeout(startTimeout);
 
@@ -830,7 +830,7 @@
     function goBack() {
          AudioController.playClick();
          
-         // STOP ALL TIMERS & COUNTDOWNS
+    
          if (countdownInterval) {
              clearInterval(countdownInterval);
              countdownInterval = null;
@@ -859,7 +859,7 @@
   AudioController.playClick();
   document.getElementById('info-panel').classList.add('hidden');
 
-  // RESUME the timer only if there are still pairs left to find
+
   if (matchedPairs < totalPairs) {
     startTimer();
   }
@@ -867,7 +867,7 @@
        document.getElementById('play-again-btn').addEventListener('click', startGame);
       document.getElementById('retry-btn').addEventListener('click', startGame);
        setLanguage('en');
-       selectDifficulty('easy'); // Para naka-highlight na agad ang Easy
+       selectDifficulty('easy');
      });
      document.addEventListener('click', () => { AudioController.init(); AudioController.startBGM(); }, { once: true });
   </script>
