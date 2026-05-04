@@ -1383,33 +1383,58 @@ if (currentActiveQuestion && !document.getElementById('questionModal').classList
 }
 
 function answerQuestion(idx, correct, explanation, player, q) {
-            const isCorrect = idx === correct;
-            const correctLetter = String.fromCharCode(65 + correct);
-            if (isCorrect) {
-                AudioController.playCorrect();
-                player.score += 5; 
-                player.correctAnswers++;
-                gameState.lastFeedback = { isCorrect: true, explanation, correctLetter };
+    const isCorrect = idx === correct;
+    const correctLetter = String.fromCharCode(65 + correct);
+    
+    if (isCorrect) {
+        AudioController.playCorrect();
+        player.score += 5; 
+        player.correctAnswers++;
+        gameState.lastFeedback = { isCorrect: true, explanation, correctLetter };
+    } else {
+        AudioController.playWrong();
+        
+        // Dagdag Chaos
+        player.chaosLevel = Math.min(maxChaos, player.chaosLevel + 1);
+        
+        if (player.chaosLevel >= 5) {
+            player.isEliminated = true;
+            gameState.lastFeedback = { isEliminated: true };
+        } else {
+        
+            const consKeys = ["cons_move", "cons_jacks", "cons_points"];
+            const selectedCons = consKeys[Math.floor(Math.random() * consKeys.length)];
+            
+           
+            if (selectedCons === "cons_move") {
+                // Babalik sa lumang pwesto MINUS 1 space (hindi bababa sa 0)
+                player.position = Math.max(0, player.oldPosition - 1);
+            } else if (selectedCons === "cons_points") {
+              
+                player.position = player.oldPosition;
+                player.score = Math.max(0, player.score - 3);
             } else {
-                AudioController.playWrong();
-                player.position = player.oldPosition; 
-                player.chaosLevel = Math.min(maxChaos, player.chaosLevel + 1);
-                updateBoard(); 
-                updateChaosDisplay();
-
-                if (player.chaosLevel >= 5) {
-                    player.isEliminated = true;
-                    gameState.lastFeedback = { isEliminated: true };
-                } else {
-                    const consKeys = ["cons_move", "cons_jacks", "cons_points"];
-                    gameState.lastFeedback = { isCorrect: false, explanation, correctLetter, consKey: consKeys[Math.floor(Math.random()*3)] };
-                }
+              
+                player.position = player.oldPosition;
             }
-            renderFeedback();
-            document.getElementById('nextQuestionBtn').classList.remove('hidden');
-            document.querySelectorAll('#questionOptions button').forEach(b => b.disabled = true);
-            updateLeaderboard(); 
+
+            gameState.lastFeedback = { 
+                isCorrect: false, 
+                explanation, 
+                correctLetter, 
+                consKey: selectedCons 
+            };
         }
+
+        updateBoard(); 
+        updateChaosDisplay();
+    }
+    
+    renderFeedback();
+    document.getElementById('nextQuestionBtn').classList.remove('hidden');
+    document.querySelectorAll('#questionOptions button').forEach(b => b.disabled = true);
+    updateLeaderboard(); 
+}
 
         function renderFeedback() {
             const f = document.getElementById('questionFeedback'), state = gameState.lastFeedback, lang = currentLanguage;
