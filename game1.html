@@ -145,7 +145,7 @@
             75% { transform: scale(1.1) rotate(-5deg); }
         }
 
-        /* Nav Container */
+       
         .top-nav {
             position: fixed;
             top: 1rem;
@@ -184,7 +184,7 @@
             background: #e5e7eb;
         }
 
-        /* Language Button Styles */
+       
         .lang-group {
             display: flex;
             background: rgba(255, 255, 255, 0.9);
@@ -209,7 +209,7 @@
             color: white !important;
         }
 
-        /* Back Button */
+       
         .back-btn {
             background: rgba(255,255,255,0.9);
             padding: 0.5rem 1rem;
@@ -545,7 +545,7 @@
 
   <script>
         /**
-         * 1. TRANSLATION SYSTEM
+         * 1. TRANSLATION SYSTEMCH
          */
         const i18n = {
             en: {
@@ -720,7 +720,7 @@
                 updatePlayersDisplay();
             }
 
-         // Update modal if open
+      
 if (currentActiveQuestion && !document.getElementById('questionModal').classList.contains('hidden')) {
     const q = currentActiveQuestion;
     const cat = q.categoryType;
@@ -728,7 +728,7 @@ if (currentActiveQuestion && !document.getElementById('questionModal').classList
     document.getElementById('questionText').textContent = q.question[lang];
     document.getElementById('questionPlayer').textContent = gameState.players[gameState.currentPlayerIndex].name + i18n[lang].turn_suffix;
 
-    // TAMA NA MAPPING PARA SA CATEGORY LABELS
+  
     const catMap = { 
         posture: 'cat_pos', 
         screentime: 'cat_screen', 
@@ -1269,7 +1269,7 @@ if (currentActiveQuestion && !document.getElementById('questionModal').classList
                 }
             }
             
-            // Ipakita ang text effect kung 3 pataas na ang chaos
+          
             const effect = document.getElementById('chaosEffect');
             if (p.chaosLevel >= 3) {
                 effect.classList.remove('hidden');
