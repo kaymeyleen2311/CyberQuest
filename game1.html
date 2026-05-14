@@ -209,21 +209,21 @@
             color: white !important;
         }
 
-        /* Back Button */
         .back-btn {
-            background: rgba(255,255,255,0.9);
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            cursor: pointer;
-            border: 2px solid #e5e7eb;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #374151;
-        }
+    display: none; /* DAGDAG MO ITO PARA HIDDEN SA START */
+    background: rgba(255,255,255,0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    cursor: pointer;
+    border: 2px solid #e5e7eb;
+    transition: all 0.2s;
+    display: none; /* SIGURADUHIN NA MERON NITO */
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #374151;
+}
         .back-btn:hover {
             transform: scale(1.05);
             background: #ffffff;
@@ -826,7 +826,8 @@
             currentPlayerIndex: 0,
             gameStarted: false,
             diceValue: 0,
-            lastFeedback: null
+            lastFeedback: null,
+            hasRolledOnce: false
         };
 
         let currentLanguage = 'en';
@@ -1345,6 +1346,8 @@ function focusPlayer(index) {
 }
 
         function startGame() {
+             document.querySelector('.back-btn').style.setProperty('display', 'flex', 'important');
+    gameState.hasRolledOnce = false; 
             AudioController.playClick();
             const players = [];
             for (let i = 1; i <= 5; i++) {
@@ -1504,6 +1507,12 @@ function updatePlayersDisplay() {
 
         function rollDice() {
             if (!gameState.gameStarted) return;
+             // DAGDAG MO ITONG BLOCK NA ITO:
+    if (!gameState.hasRolledOnce) {
+        gameState.hasRolledOnce = true;
+        // Itatago na ang back button kapag unang roll
+        document.querySelector('.back-btn').style.setProperty('display', 'none', 'important');
+    }
             AudioController.init();
             const dice = document.getElementById('dice');
             const rollBtn = document.getElementById('rollDiceBtn');
@@ -1690,16 +1699,32 @@ function closeQuestion() {
             }, 500);
         }
 
-        function goBack() {
-            if (!document.getElementById('questionModal').classList.contains('hidden')) return;
-            AudioController.playClick();
-            const board = document.getElementById('gameBoard');
-            const setup = document.getElementById('setupScreen');
-            if (!board.classList.contains('hidden')) { board.classList.add('hidden'); setup.classList.remove('hidden'); }
-            else if (!setup.classList.contains('hidden')) { setup.classList.add('hidden'); document.getElementById('welcomeScreen').classList.remove('hidden'); }
-            else { window.history.back(); }
-        }
+     function goBack() {
+    if (gameState.hasRolledOnce) return; 
+    if (!document.getElementById('questionModal').classList.contains('hidden')) return;
+    AudioController.playClick();
+    
+    const board = document.getElementById('gameBoard');
+    const setup = document.getElementById('setupScreen');
+    const welcome = document.getElementById('welcomeScreen');
+    const backBtn = document.querySelector('.back-btn');
 
+    if (!board.classList.contains('hidden')) { 
+        // Galing sa board, pabalik sa setup names
+        board.classList.add('hidden'); 
+        setup.classList.remove('hidden'); 
+    }
+    else if (!setup.classList.contains('hidden')) { 
+        // Galing sa setup, pabalik sa rules/mechanics
+        setup.classList.add('hidden'); 
+        welcome.classList.remove('hidden'); 
+        // ITATAGO NATIN ANG BUTTON DITO
+        backBtn.style.setProperty('display', 'none', 'important');
+    }
+    else { 
+        window.history.back(); 
+    }
+}
         function showToast(msg, type) {
             const t = document.createElement('div');
             const c = { success: 'bg-green-500', warning: 'bg-yellow-500', info: 'bg-blue-500' };
@@ -1715,7 +1740,14 @@ function closeQuestion() {
         document.getElementById('rollDiceBtn').onclick = rollDice;
         document.getElementById('nextQuestionBtn').onclick = closeQuestion;
         document.getElementById('newGameBtn').onclick = () => location.reload();
-        document.getElementById('proceedBtn').onclick = () => { AudioController.init(); document.getElementById('welcomeScreen').classList.add('hidden'); document.getElementById('setupScreen').classList.remove('hidden'); };
+      document.getElementById('proceedBtn').onclick = () => { 
+    AudioController.init(); 
+    document.getElementById('welcomeScreen').classList.add('hidden'); 
+    document.getElementById('setupScreen').classList.remove('hidden'); 
+    
+    // PAPALITAWIN NATIN ANG BACK BUTTON DITO (Dahil nasa input names na tayo)
+    document.querySelector('.back-btn').style.setProperty('display', 'flex', 'important');
+};
         document.getElementById('agreeCheckbox').onchange = (e) => document.getElementById('proceedBtn').disabled = !e.target.checked;
 
         document.addEventListener('DOMContentLoaded', () => { initializeSDK(); startWelcomeSequence(); setLanguage('en'); });
