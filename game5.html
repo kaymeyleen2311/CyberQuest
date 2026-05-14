@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en" class="h-full">
  <head>
@@ -94,7 +95,6 @@
           .float {
        animation: float 3s ease-in-out infinite;
      }
-     /* Sound Toggle Button */
      .sound-toggle {
          position: fixed;
          top: 1rem;
@@ -118,7 +118,6 @@
          opacity: 0.6;
          background: rgba(0, 0, 0, 0.2);
      }
-    /* Container for all top buttons */
      .top-nav {
          position: fixed;
          top: 1rem;
@@ -128,9 +127,8 @@
          gap: 0.75rem; 
          align-items: center;
      }
-
-     
-     .nav-btn {
+    .nav-btn {
+         display: none; 
          background: rgba(255, 255, 255, 0.2);
          backdrop-filter: blur(5px);
          padding: 0.5rem 1rem;
@@ -142,20 +140,17 @@
          color: white;
          font-weight: bold;
          font-size: 0.8rem;
+         align-items: center;
+         justify-content: center;
      }
-
-   
-     
      .lang-group {
          display: flex;
-         background: rgba(34, 211, 238, 0.2); /* Cyan tint */
+         background: rgba(34, 211, 238, 0.2); 
          backdrop-filter: blur(5px);
          border-radius: 12px;
          border: 2px solid rgba(255, 255, 255, 0.4);
          overflow: hidden;
      }
-
-    
      .lang-btn {
          background: transparent;
          border: none;
@@ -166,23 +161,16 @@
          transition: all 0.2s;
          font-size: 0.8rem;
      }
-
-  
      .lang-group button:first-child {
          border-radius: 10px 0 0 10px;
      }
-
-    
      .lang-group button:last-child {
          border-radius: 0 10px 10px 0;
-         border-left: 1px solid rgba(255, 255, 255, 0.2); /* Divider line */
+         border-left: 1px solid rgba(255, 255, 255, 0.2);
      }
-
-  
      .lang-active {
          background: rgba(34, 211, 238, 0.5) !important;
      }
-
      .nav-btn:hover, .lang-btn:hover {
          background: rgba(255, 255, 255, 0.3);
      }
@@ -190,8 +178,8 @@
   <style>@view-transition { navigation: auto; }</style>
  </head>
  <body class="h-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-<div class="top-nav">
-   <button class="nav-btn" onclick="goBack()">↩ <span data-i18n="back">Back</span></button>
+ <div class="top-nav">
+   <button id="back-button" class="nav-btn" onclick="goBack()">↩ <span data-i18n="back">Back</span></button>
    <div class="lang-group">
       <button class="lang-btn lang-active" onclick="setLanguage('en')">English</button>
       <button class="lang-btn" onclick="setLanguage('tl')">Tagalog</button>
@@ -201,14 +189,14 @@
  <button id="soundToggle" class="sound-toggle"><span id="soundIcon">🔊</span></button>
 
  <div id="app" class="w-full h-full flex flex-col overflow-y-auto">
-   <!-- LOADING SCREENCH -->
+   <!-- LOADING SCREEN -->
    <div id="loading-screen" class="flex flex-col items-center justify-center min-h-full p-6">
     <div class="text-8xl mb-6 float">👁️</div>
     <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 mb-8 text-center" data-i18n="game_title">Eye Care Memory Match</h1>
     <p class="text-white text-xl" data-i18n="loading">Loading game...</p>
    </div>
 
-   <!-- RULES SCREENCH -->
+   <!-- RULES SCREEN -->
    <div id="rules-screen" class="hidden flex flex-col items-center justify-center min-h-full p-4 md:p-6">
     <div class="max-w-3xl w-full">
      <div class="text-center mb-2">
@@ -228,7 +216,7 @@
     </div>
    </div>
 
-   <!-- NAME SCREENCH -->
+   <!-- NAME SCREEN -->
    <div id="name-screen" class="hidden flex flex-col items-center justify-center min-h-full p-4 md:p-6">
      <div class="max-w-md w-full">
        <div class="text-center mb-6">
@@ -249,7 +237,7 @@
      </div>
    </div>
 
-  <!-- GAME SCREENCH -->
+  <!-- GAME SCREEN -->
    <div id="game-screen" class="hidden flex flex-col h-full p-2 pt-24">
     <div class="flex justify-between items-center mb-2 px-2 text-xs text-white">
       <div>Player: <span id="player-display" class="text-cyan-300 font-bold"></span></div>
@@ -275,7 +263,6 @@
     </div>
    </div>
 
-   
    <div id="win-screen" class="hidden flex flex-col items-center justify-center min-h-full p-6 text-center">
     <div class="text-8xl mb-4 bounce">🏆</div>
     <h1 class="text-4xl font-black text-yellow-300 mb-2" data-i18n="win_title">AMAZING!</h1>
@@ -293,7 +280,6 @@
     </div>
    </div>
 
-
    <div id="gameover-screen" class="hidden flex flex-col items-center justify-center min-h-full p-6 text-center">
     <div class="text-8xl mb-4">⏰</div>
     <h1 class="text-4xl font-black text-red-400 mb-2" data-i18n="go_title">Time's Up!</h1>
@@ -305,108 +291,14 @@
     <button id="retry-btn" class="w-full max-w-xs py-4 bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold rounded-full shadow-lg" data-i18n="retry_btn">🔄 Try Again!</button>
    </div>
  </div>
+
 <script>
-     /**
-      * TRANSLATION SYSTEMCH
-      */
      const i18n = {
         en: {
-            back: "Back",
-            game_title: "Eye Care Memory Match",
-            loading: "Loading game...",
-            rules_title: "Game Rules",
-            rules_subtitle: "🎯 Objective & How to Play",
-            rule_1_t: "Flip Cards",
-            rule_1_d: "Match pairs of Good and Bad eye habits.",
-            rule_2_t: "Learn Facts",
-            rule_2_d: "Every match reveals an eye health fact!",
-            rule_3_t: "Beat the Clock",
-            rule_3_d: "Match all pairs before time runs out.",
-            rule_4_t: "Pro Tip",
-            rule_4_d: "Cards that form a pair will always share the exact same solid color!",
-            understand_btn: "✅ I Understand - Let's Play!",
-            welcome: "Welcome, Player!",
-            tagline: "Enter your name to begin your eye care journey",
-            name_label: "Your Name *",
-            name_placeholder: "Enter your name here...",
-            name_error: "⚠️ Please enter your name to continue",
-            choose_diff: "Choose Difficulty: *",
-            diff_easy: "😊 Easy - 6 Cards (60s)",
-            diff_med: "🤔 Medium - 8 Cards (45s)",
-            diff_hard: "🔥 Hard - 10 Cards (30s)",
-            diff_med_locked: "🔒 Medium - Locked (Beat Easy)",
-            diff_hard_locked: "🔒 Hard - Locked (Beat Medium)",
-            diff_error: "⚠️ Please select a difficulty level to continue",
-            start_btn: "🎮 Start Game!",
-            match_title: "Perfect Match!",
-            continue_btn: "Continue! 🎮",
-            win_title: "AMAZING!",
-            congrats: "Congratulations,",
-            win_msg: "You matched all the pairs! 🎉",
-            stat_time: "⏱️ Time Left",
-            stat_moves: "🔄 Total Moves",
-            stat_perf: "⭐ Performance",
-            win_tip: "💡 Remember: Take care of your eyes with proper screen habits!",
-            play_again: "🔄 Play Again!",
-            next_level_btn: "🚀 Next Level!",
-            go_title: "Time's Up!",
-            go_try: "Nice try,",
-            stat_matches: "Matches Found",
-            go_msg: "Try again to match all the pairs!",
-            retry_btn: "🔄 Try Again!",
-            perf_perfect: "PERFECT! 🌟",
-            perf_excellent: "Excellent! ⭐",
-            perf_great: "Great! 👍",
-            perf_good: "Good!"
+            back: "Back", game_title: "Eye Care Memory Match", loading: "Loading game...", rules_title: "Game Rules", rules_subtitle: "🎯 Objective & How to Play", rule_1_t: "Flip Cards", rule_1_d: "Match pairs of Good and Bad eye habits.", rule_2_t: "Learn Facts", rule_2_d: "Every match reveals an eye health fact!", rule_3_t: "Beat the Clock", rule_3_d: "Match all pairs before time runs out.", rule_4_t: "Pro Tip", rule_4_d: "Cards that form a pair will always share the exact same solid color!", understand_btn: "✅ I Understand - Let's Play!", welcome: "Welcome, Player!", tagline: "Enter your name to begin your eye care journey", name_label: "Your Name *", name_placeholder: "Enter your name here...", name_error: "⚠️ Please enter your name to continue", choose_diff: "Choose Difficulty: *", diff_easy: "😊 Easy - 6 Cards (60s)", diff_med: "🤔 Medium - 8 Cards (45s)", diff_hard: "🔥 Hard - 10 Cards (30s)", diff_med_locked: "🔒 Medium - Locked (Beat Easy)", diff_hard_locked: "🔒 Hard - Locked (Beat Medium)", diff_error: "⚠️ Please select a difficulty level to continue", start_btn: "🎮 Start Game!", match_title: "Perfect Match!", continue_btn: "Continue! 🎮", win_title: "AMAZING!", congrats: "Congratulations,", win_msg: "You matched all the pairs! 🎉", stat_time: "⏱️ Time Left", stat_moves: "🔄 Total Moves", stat_perf: "⭐ Performance", win_tip: "💡 Remember: Take care of your eyes with proper screen habits!", play_again: "🔄 Play Again!", next_level_btn: "🚀 Next Level!", go_title: "Time's Up!", go_try: "Nice try,", stat_matches: "Matches Found", go_msg: "Try again to match all the pairs!", retry_btn: "🔄 Try Again!", perf_perfect: "PERFECT! 🌟", perf_excellent: "Excellent! ⭐", perf_great: "Great! 👍", perf_good: "Good!"
         },
         tl: {
-            back: "Bumalik",
-            game_title: "Memory Match sa Pag-aalaga ng Mata",
-            loading: "Naglo-load ang laro...",
-            rules_title: "Mga Panuntunan",
-            rules_subtitle: "🎯 Layunin at Paano Maglaro",
-            rule_1_t: "I-flip ang mga Card",
-            rule_1_d: "I-match ang pares ng Mabuti at Masamang gawi sa mata.",
-            rule_2_t: "Matuto ng Impormasyon",
-            rule_2_d: "Bawat match ay nagpapakita ng impormasyon sa kalusugan ng mata!",
-            rule_3_t: "Talunin ang Oras",
-            rule_3_d: "I-match ang lahat bago maubos ang oras.",
-            rule_4_t: "Pro Tip",
-            rule_4_d: "Ang mga card na magkapares ay laging may parehong kulay!",
-            understand_btn: "✅ Naintindihan ko - Maglaro na!",
-            welcome: "Maligayang Pagdating!",
-            tagline: "Ipasok ang iyong pangalan upang simulan ang paglalakbay",
-            name_label: "Iyong Pangalan *",
-            name_placeholder: "Ipasok ang pangalan dito...",
-            name_error: "⚠️ Mangyaring ilagay ang iyong pangalan",
-            choose_diff: "Pumili ng Hirap: *",
-            diff_easy: "😊 Madali - 6 Card (60s)",
-            diff_med: "🤔 Katamtaman - 8 Card (45s)",
-            diff_hard: "🔥 Mahirap - 10 Card (30s)",
-            diff_med_locked: "🔒 Katamtaman - Locked (Ipasa ang Madali)",
-            diff_hard_locked: "🔒 Mahirap - Locked (Ipasa ang Katamtaman)",
-            diff_error: "⚠️ Mangyaring pumili ng antas ng hirap",
-            start_btn: "🎮 Simulan ang Laro!",
-            match_title: "Tamang Match!",
-            continue_btn: "Ituloy! 🎮",
-            win_title: "MAGALING!",
-            congrats: "Malugod na pagbati,",
-            win_msg: "Nahanap mo ang lahat ng pares! 🎉",
-            stat_time: "⏱️ Oras na Natira",
-            stat_moves: "🔄 Kabuuang Galaw",
-            stat_perf: "⭐ Performance",
-            win_tip: "💡 Tandaan: Alagaan ang iyong mga mata sa tamang gawi sa screen!",
-            play_again: "🔄 Maglaro Muli!",
-            next_level_btn: "🚀 Susunod na Antas!",
-            go_title: "Tapos na ang Oras!",
-            go_try: "Magandang subok,",
-            stat_matches: "Nahanap na Match",
-            go_msg: "Subukan muli para mahanap ang lahat ng pares!",
-            retry_btn: "🔄 Subukan Muli!",
-            perf_perfect: "PERPEKTO! 🌟",
-            perf_excellent: "Napakahusay! ⭐",
-            perf_great: "Magaling! 👍",
-            perf_good: "Mabuti!"
+            back: "Bumalik", game_title: "Memory Match sa Pag-aalaga ng Mata", loading: "Naglo-load ang laro...", rules_title: "Mga Panuntunan", rules_subtitle: "🎯 Layunin at Paano Maglaro", rule_1_t: "I-flip ang mga Card", rule_1_d: "I-match ang pares ng Mabuti at Masamang gawi sa mata.", rule_2_t: "Matuto ng Impormasyon", rule_2_d: "Bawat match ay nagpapakita ng impormasyon sa kalusugan ng mata!", rule_3_t: "Talunin ang Oras", rule_3_d: "I-match ang lahat bago maubos ang oras.", rule_4_t: "Pro Tip", rule_4_d: "Ang mga card na magkapares ay laging may parehong kulay!", understand_btn: "✅ Naintindihan ko - Maglaro na!", welcome: "Maligayang Pagdating!", tagline: "Ipasok ang iyong pangalan upang simulan ang paglalakbay", name_label: "Iyong Pangalan *", name_placeholder: "Ipasok ang pangalan dito...", name_error: "⚠️ Mangyaring ilagay ang iyong pangalan", choose_diff: "Pumili ng Hirap: *", diff_easy: "😊 Madali - 6 Card (60s)", diff_med: "🤔 Katamtaman - 8 Card (45s)", diff_hard: "🔥 Mahirap - 10 Card (30s)", diff_med_locked: "🔒 Katamtaman - Locked (Ipasa ang Madali)", diff_hard_locked: "🔒 Mahirap - Locked (Ipasa ang Katamtaman)", diff_error: "⚠️ Mangyaring pumili ng antas ng hirap", start_btn: "🎮 Simulan ang Laro!", match_title: "Tamang Match!", continue_btn: "Ituloy! 🎮", win_title: "MAGALING!", congrats: "Malugod na pagbati,", win_msg: "Nahanap mo ang lahat ng pares! 🎉", stat_time: "⏱️ Oras na Natira", stat_moves: "🔄 Kabuuang Galaw", stat_perf: "⭐ Performance", win_tip: "💡 Tandaan: Alagaan ang iyong mga mata sa tamang gawi sa screen!", play_again: "🔄 Maglaro Muli!", next_level_btn: "🚀 Susunod na Antas!", go_title: "Tapos na ang Oras!", go_try: "Magandang subok,", stat_matches: "Nahanap na Match", go_msg: "Subukan muli para mahanap ang lahat ng pares!", retry_btn: "🔄 Subukan Muli!", perf_perfect: "PERPEKTO! 🌟", perf_excellent: "Napakahusay! ⭐", perf_great: "Magaling! 👍", perf_good: "Mabuti!"
         }
      };
 
@@ -452,13 +344,7 @@
              const key = el.getAttribute('data-placeholder-i18n');
              if (i18n[lang][key]) el.placeholder = i18n[lang][key];
          });
-
-         // Update visible fact popup if open
-         if (activeFact) {
-             document.getElementById('info-fact').textContent = activeFact[lang];
-         }
-
-         // Update cards on board
+         if (activeFact) document.getElementById('info-fact').textContent = activeFact[lang];
          document.querySelectorAll('.card').forEach(cardEl => {
              const idx = cardEl.dataset.cardIndex;
              if (cards[idx]) {
@@ -466,282 +352,123 @@
                  if (textEl) textEl.textContent = cards[idx].text[lang];
              }
          });
-
          updateDifficultyUI();
-         AudioController.playClick();
+         if (AudioController.ctx) AudioController.playClick();
      }
 
-     /**
-      * AUDIO SYSTEM
-      */
      const AudioController = {
-         ctx: null,
-         isMuted: false,
-         bgmInterval: null,
-         noteIndex: 0,
-         melody: [
-             { note: 349.23, len: 200 }, { note: 440.00, len: 200 }, { note: 523.25, len: 400 },
-             { note: 587.33, len: 200 }, { note: 523.25, len: 200 }, { note: 440.00, len: 400 },
-             { note: 466.16, len: 200 }, { note: 392.00, len: 200 }, { note: 329.63, len: 400 },
-             { note: 261.63, len: 200 }, { note: 349.23, len: 600 }, { note: 0,      len: 200 }
-         ],
-         init: function() {
-             if (!this.ctx) {
-                 const AudioContext = window.AudioContext || window.webkitAudioContext;
-                 this.ctx = new AudioContext();
-             }
-             if (this.ctx.state === 'suspended') this.ctx.resume();
-         },
-         toggleMute: function() {
-             this.isMuted = !this.isMuted;
-             const btn = document.getElementById('soundToggle');
-             const icon = document.getElementById('soundIcon');
-             if (this.isMuted) {
-                 this.stopBGM();
-                 btn.classList.add('sound-off');
-                 icon.textContent = '🔇';
-             } else {
-                 this.init();
-                 this.startBGM();
-                 this.playClick();
-                 btn.classList.remove('sound-off');
-                 icon.textContent = '🔊';
-             }
-         },
-         playTone: function(freq, type, duration, vol = 1.0) {
-             if (this.isMuted || !this.ctx) return;
-             const osc = this.ctx.createOscillator();
-             const gain = this.ctx.createGain();
-             osc.type = type;
-             osc.frequency.value = freq;
-             osc.connect(gain);
-             gain.connect(this.ctx.destination);
-             const now = this.ctx.currentTime;
-             gain.gain.setValueAtTime(vol, now);
-             gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-             osc.start();
-             osc.stop(now + duration);
-         },
+         ctx: null, isMuted: false, bgmInterval: null, noteIndex: 0,
+         melody: [{ note: 349.23, len: 200 }, { note: 440.00, len: 200 }, { note: 523.25, len: 400 }, { note: 587.33, len: 200 }, { note: 523.25, len: 200 }, { note: 440.00, len: 400 }, { note: 466.16, len: 200 }, { note: 392.00, len: 200 }, { note: 329.63, len: 400 }, { note: 261.63, len: 200 }, { note: 349.23, len: 600 }, { note: 0, len: 200 }],
+         init: function() { if (!this.ctx) { const AudioContext = window.AudioContext || window.webkitAudioContext; this.ctx = new AudioContext(); } if (this.ctx.state === 'suspended') this.ctx.resume(); },
+         toggleMute: function() { this.isMuted = !this.isMuted; const btn = document.getElementById('soundToggle'); const icon = document.getElementById('soundIcon'); if (this.isMuted) { this.stopBGM(); btn.classList.add('sound-off'); icon.textContent = '🔇'; } else { this.init(); this.startBGM(); this.playClick(); btn.classList.remove('sound-off'); icon.textContent = '🔊'; } },
+         playTone: function(freq, type, duration, vol = 1.0) { if (this.isMuted || !this.ctx) return; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = type; osc.frequency.value = freq; osc.connect(gain); gain.connect(this.ctx.destination); const now = this.ctx.currentTime; gain.gain.setValueAtTime(vol, now); gain.gain.exponentialRampToValueAtTime(0.001, now + duration); osc.start(); osc.stop(now + duration); },
          playClick: function() { this.playTone(600, 'sine', 0.1); },
          playFlip: function() { this.playTone(400, 'triangle', 0.1, 0.5); },
-         playMatch: function() {
-             this.playTone(1046.50, 'sine', 0.3);
-             setTimeout(() => this.playTone(1318.51, 'sine', 0.5), 150);
-         },
-         playMismatch: function() {
-             this.playTone(174.61, 'triangle', 0.3);
-         },
-         playWin: function() {
-             [523.25, 659.25, 783.99, 1046.50].forEach((n, i) => setTimeout(() => this.playTone(n, 'sine', 0.5), i * 150));
-         },
-         playGameOver: function() {
-             [440, 415, 392, 349].forEach((n, i) => setTimeout(() => this.playTone(n, 'triangle', 0.5), i * 300));
-         },
-         startBGM: function() {
-             if (this.isMuted || this.bgmInterval) return;
-             this.init();
-             const playNextNote = () => {
-                 if (this.isMuted) return;
-                 const noteData = this.melody[this.noteIndex];
-                 if (noteData.note > 0) this.playTone(noteData.note, 'sine', noteData.len / 1000, 0.2);
-                 this.noteIndex = (this.noteIndex + 1) % this.melody.length;
-                 this.bgmInterval = setTimeout(playNextNote, noteData.len);
-             };
-             playNextNote();
-         },
-         stopBGM: function() {
-             if (this.bgmInterval) { clearTimeout(this.bgmInterval); this.bgmInterval = null; }
-         }
+         playMatch: function() { this.playTone(1046.50, 'sine', 0.3); setTimeout(() => this.playTone(1318.51, 'sine', 0.5), 150); },
+         playMismatch: function() { this.playTone(174.61, 'triangle', 0.3); },
+         playWin: function() { [523.25, 659.25, 783.99, 1046.50].forEach((n, i) => setTimeout(() => this.playTone(n, 'sine', 0.5), i * 150)); },
+         playGameOver: function() { [440, 415, 392, 349].forEach((n, i) => setTimeout(() => this.playTone(n, 'triangle', 0.5), i * 300)); },
+         startBGM: function() { if (this.isMuted || this.bgmInterval) return; this.init(); const playNextNote = () => { if (this.isMuted) return; const noteData = this.melody[this.noteIndex]; if (noteData.note > 0) this.playTone(noteData.note, 'sine', noteData.len / 1000, 0.2); this.noteIndex = (this.noteIndex + 1) % this.melody.length; this.bgmInterval = setTimeout(playNextNote, noteData.len); }; playNextNote(); },
+         stopBGM: function() { if (this.bgmInterval) { clearTimeout(this.bgmInterval); this.bgmInterval = null; } }
      };
 
     const allPairs = [
-      
-       { 
-         good: { icon: "📏", text: { en: "Safe Distance", tl: "Tamang Distansya" } }, 
-         bad: { icon: "👓", text: { en: "Too Close", tl: "Masyadong Malapit" } }, 
-         fact: { en: "Keep your screen at least 18-24 inches away to avoid eye strain.", tl: "Panatilihin ang iyong screen sa layong 18-24 pulgada upang hindi mapagod ang mga mata." } 
-       },
-       { 
-         good: { icon: "👀", text: { en: "Blink Often", tl: "Madalas Kumurap" } }, 
-         bad: { icon: "😶", text: { en: "Not Blinking", tl: "Hindi Kumukurap" } }, 
-         fact: { en: "Blinking spreads moisture across your eyes, preventing them from getting dry.", tl: "Ang pagkurap ay nagkakalat ng halumigmig sa mata para hindi ito matuyo." } 
-       },
-       { 
-         good: { icon: "💡", text: { en: "Proper Lighting", tl: "Tamang Ilaw" } }, 
-         bad: { icon: "🌑", text: { en: "Dim Light", tl: "Mahinang Ilaw" } }, 
-         fact: { en: "Proper room lighting reduces the contrast between the screen and surroundings.", tl: "Ang tamang ilaw sa silid ay nagpapababa ng pagkapagod ng mata mula sa liwanag ng screen." } 
-       },
-
-    
-       { 
-         good: { icon: "🕰️", text: { en: "20-20-20 Rule", tl: "Rule na 20-20-20" } }, 
-         bad: { icon: "⏳", text: { en: "Long Screen Time", tl: "Matagal na Screen Time" } }, 
-         fact: { en: "Every 20 minutes, look at something 20 feet away for 20 seconds to rest your eyes.", tl: "Tuwing 20 minuto, tumingin sa malayo (20 feet) sa loob ng 20 segundo para makapahinga ang mata." } 
-       },
-       { 
-         good: { icon: "🧍", text: { en: "Sit Upright", tl: "Umupo nang Tuwid" } }, 
-         bad: { icon: "🪑", text: { en: "Slouching", tl: "Nakayukod" } }, 
-         fact: { en: "Sitting upright with the screen at eye level prevents neck and eye fatigue.", tl: "Ang pag-upo nang tuwid habang pantay sa mata ang screen ay nakaiiwas sa sakit ng leeg at mata." } 
-       },
-       { 
-         good: { icon: "😌", text: { en: "Rest Eyes", tl: "Ipahinga ang mga Mata" } }, 
-         bad: { icon: "😵", text: { en: "Ignoring Strain", tl: "Tinitiis ang Pagod" } }, 
-         fact: { en: "If your eyes feel itchy or tired, close them for a few minutes to recover.", tl: "Kung makati o pagod na ang mga mata, ipikit muna ito nang ilang minuto para makabawi." } 
-       },
-       { 
-         good: { icon: "🌙", text: { en: "Limit Bedtime Use", tl: "Limitahan sa Gabi" } }, 
-         bad: { icon: "📱", text: { en: "Gadgets in Bed", tl: "Gadgets sa Kama" } }, 
-         fact: { en: "Avoiding gadgets before sleep helps your brain produce melatonin for better rest.", tl: "Ang pag-iwas sa gadgets bago matulog ay tumutulong sa utak na makapagpahinga nang maayos." } 
-       },
-
-       
-       { 
-         good: { icon: "🌳", text: { en: "Outdoor Balance", tl: "Oras sa Labas" } }, 
-         bad: { icon: "📺", text: { en: "Excessive Screen Time", tl: "Sobra sa Screen Time" } }, 
-         fact: { en: "Outdoor light and distance viewing help prevent nearsightedness in kids.", tl: "Ang liwanag sa labas at pagtingin sa malayo ay nakatutulong para hindi lumabo ang mata." } 
-       },
-       { 
-         good: { icon: "🧼", text: { en: "Wash Hands", tl: "Maghugas ng Kamay" } }, 
-         bad: { icon: "🤲", text: { en: "Rubbing Eyes", tl: "Pagkuskos ng Mata" } }, 
-         fact: { en: "Hands carry germs; washing them and avoiding eye-rubbing prevents infections.", tl: "Ang kamay ay may mikrobyo; ang paghuhugas at hindi pagkuskos ay iwas-impeksyon." } 
-       },
-       { 
-         good: { icon: "🏠", text: { en: "Adjust Brightness", tl: "Iayon ang Liwanag" } }, 
-         bad: { icon: "🔆", text: { en: "Glare Mismatch", tl: "Maling Liwanag" } }, 
-         fact: { en: "Match your screen brightness to your room's light level to reduce glare.", tl: "Ibagay ang liwanag ng iyong screen sa liwanag ng kwarto para hindi masilaw ang mga mata." } 
-       },
-       { 
-         good: { icon: "🏥", text: { en: "Visit Eye Doctor", tl: "Patingin sa Doktor" } }, 
-         bad: { icon: "🚫", text: { en: "Skipping Exams", tl: "Walang Check-up" } }, 
-         fact: { en: "Regular check-ups can detect vision problems early before they get worse.", tl: "Ang regular na check-up ay nakaaagap sa mga problema sa mata bago ito lumala." } 
-       },
-       { 
-         good: { icon: "🪑", text: { en: "Use When Still", tl: "Gamitin nang Nakatigil" } }, 
-         bad: { icon: "🚶", text: { en: "Gadgets While Moving", tl: "Habang Naglalakad" } }, 
-         fact: { en: "Focusing on a screen while walking causes dizziness and extreme eye fatigue.", tl: "Ang pagtutok sa screen habang naglalakad ay nakahihilo at nakapapagod sa focus ng mata." } 
-       }
+       { good: { icon: "📏", text: { en: "Safe Distance", tl: "Tamang Distansya" } }, bad: { icon: "👓", text: { en: "Too Close", tl: "Masyadong Malapit" } }, fact: { en: "Keep your screen at least 18-24 inches away to avoid eye strain.", tl: "Panatilihin ang iyong screen sa layong 18-24 pulgada upang hindi mapagod ang mga mata." } },
+       { good: { icon: "👀", text: { en: "Blink Often", tl: "Madalas Kumurap" } }, bad: { icon: "😶", text: { en: "Not Blinking", tl: "Hindi Kumukurap" } }, fact: { en: "Blinking spreads moisture across your eyes, preventing them from getting dry.", tl: "Ang pagkurap ay nagkakalat ng halumigmig sa mata para hindi ito matuyo." } },
+       { good: { icon: "💡", text: { en: "Proper Lighting", tl: "Tamang Ilaw" } }, bad: { icon: "🌑", text: { en: "Dim Light", tl: "Mahinang Ilaw" } }, fact: { en: "Proper room lighting reduces the contrast between the screen and surroundings.", tl: "Ang tamang ilaw sa silid ay nagpapababa ng pagkapagod ng mata mula sa liwanag ng screen." } },
+       { good: { icon: "🕰️", text: { en: "20-20-20 Rule", tl: "Rule na 20-20-20" } }, bad: { icon: "⏳", text: { en: "Long Screen Time", tl: "Matagal na Screen Time" } }, fact: { en: "Every 20 minutes, look at something 20 feet away for 20 seconds to rest your eyes.", tl: "Tuwing 20 minuto, tumingin sa malayo (20 feet) sa loob ng 20 segundo para makapahinga ang mata." } },
+       { good: { icon: "🧍", text: { en: "Sit Upright", tl: "Umupo nang Tuwid" } }, bad: { icon: "🪑", text: { en: "Slouching", tl: "Nakayukod" } }, fact: { en: "Sitting upright with the screen at eye level prevents neck and eye fatigue.", tl: "Ang pag-upo nang tuwid habang pantay sa mata ang screen ay nakaiiwas sa sakit ng leeg at mata." } },
+       { good: { icon: "😌", text: { en: "Rest Eyes", tl: "Ipahinga ang mga Mata" } }, bad: { icon: "😵", text: { en: "Ignoring Strain", tl: "Tinitiis ang Pagod" } }, fact: { en: "If your eyes feel itchy or tired, close them for a few minutes to recover.", tl: "Kung makati o pagod na ang mga mata, ipikit muna ito nang ilang minuto para makabawi." } },
+       { good: { icon: "🌙", text: { en: "Limit Bedtime Use", tl: "Limitahan sa Gabi" } }, bad: { icon: "📱", text: { en: "Gadgets in Bed", tl: "Gadgets sa Kama" } }, fact: { en: "Avoiding gadgets before sleep helps your brain produce melatonin for better rest.", tl: "Ang pag-iwas sa gadgets bago matulog ay tumutulong sa utak na makapagpahinga nang maayos." } },
+       { good: { icon: "🌳", text: { en: "Outdoor Balance", tl: "Oras sa Labas" } }, bad: { icon: "📺", text: { en: "Excessive Screen Time", tl: "Sobra sa Screen Time" } }, fact: { en: "Outdoor light and distance viewing help prevent nearsightedness in kids.", tl: "Ang liwanag sa labas at pagtingin sa malayo ay nakatutulong para hindi lumabo ang mata." } },
+       { good: { icon: "🧼", text: { en: "Wash Hands", tl: "Maghugas ng Kamay" } }, bad: { icon: "🤲", text: { en: "Rubbing Eyes", tl: "Pagkuskos ng Mata" } }, fact: { en: "Hands carry germs; washing them and avoiding eye-rubbing prevents infections.", tl: "Ang kamay ay may mikrobyo; ang paghuhugas at hindi pagkuskos ay iwas-impeksyon." } },
+       { good: { icon: "🏠", text: { en: "Adjust Brightness", tl: "Iayon ang Liwanag" } }, bad: { icon: "🔆", text: { en: "Glare Mismatch", tl: "Maling Liwanag" } }, fact: { en: "Match your screen brightness to your room's light level to reduce glare.", tl: "Ibagay ang liwanag ng iyong screen sa liwanag ng kwarto para hindi masilaw ang mga mata." } },
+       { good: { icon: "🏥", text: { en: "Visit Eye Doctor", tl: "Patingin sa Doktor" } }, bad: { icon: "🚫", text: { en: "Skipping Exams", tl: "Walang Check-up" } }, fact: { en: "Regular check-ups can detect vision problems early before they get worse.", tl: "Ang regular na check-up ay nakaaagap sa mga problema sa mata bago ito lumala." } },
+       { good: { icon: "🪑", text: { en: "Use When Still", tl: "Gamitin nang Nakatigil" } }, bad: { icon: "🚶", text: { en: "Gadgets While Moving", tl: "Habang Naglalakad" } }, fact: { en: "Focusing on a screen while walking causes dizziness and extreme eye fatigue.", tl: "Ang pagtutok sa screen habang naglalakad ay nakahihilo at nakapapagod sa focus ng mata." } }
      ];
 
      function showScreen(screenId) {
-       ['loading-screen', 'rules-screen', 'name-screen', 'game-screen', 'win-screen', 'gameover-screen'].forEach(id => document.getElementById(id).classList.add('hidden'));
-       document.getElementById(screenId).classList.remove('hidden');
+       ['loading-screen', 'rules-screen', 'name-screen', 'game-screen', 'win-screen', 'gameover-screen'].forEach(id => {
+         const el = document.getElementById(id);
+         if (el) el.classList.add('hidden');
+       });
+       const target = document.getElementById(screenId);
+       if (target) target.classList.remove('hidden');
+
+       const backBtn = document.getElementById('back-button');
+       if (backBtn) {
+         if (screenId === 'name-screen') {
+           backBtn.style.display = 'inline-flex';
+         } else {
+           backBtn.style.display = 'none';
+         }
+       }
+     }
+
+     function goBack() {
+       AudioController.playClick();
+       if (!document.getElementById('name-screen').classList.contains('hidden')) {
+         showScreen('rules-screen');
+       }
      }
 
      function updateDifficultyUI() {
-         const medBtn = document.getElementById('diff-medium');
-         const hardBtn = document.getElementById('diff-hard');
-         const easyBtn = document.getElementById('diff-easy');
+         const medBtn = document.getElementById('diff-medium'), hardBtn = document.getElementById('diff-hard'), easyBtn = document.getElementById('diff-easy');
          easyBtn.querySelector('span').textContent = i18n[currentLanguage].diff_easy;
-         if (unlockedMedium) { medBtn.classList.remove('opacity-50', 'cursor-not-allowed'); medBtn.querySelector('span').textContent = i18n[currentLanguage].diff_med; }
-         else { medBtn.querySelector('span').textContent = i18n[currentLanguage].diff_med_locked; }
-         if (unlockedHard) { hardBtn.classList.remove('opacity-50', 'cursor-not-allowed'); hardBtn.querySelector('span').textContent = i18n[currentLanguage].diff_hard; }
-         else { hardBtn.querySelector('span').textContent = i18n[currentLanguage].diff_hard_locked; }
+         if (unlockedMedium) { medBtn.classList.remove('opacity-50', 'cursor-not-allowed'); medBtn.querySelector('span').textContent = i18n[currentLanguage].diff_med; } else { medBtn.querySelector('span').textContent = i18n[currentLanguage].diff_med_locked; }
+         if (unlockedHard) { hardBtn.classList.remove('opacity-50', 'cursor-not-allowed'); hardBtn.querySelector('span').textContent = i18n[currentLanguage].diff_hard; } else { hardBtn.querySelector('span').textContent = i18n[currentLanguage].diff_hard_locked; }
      }
 
     function selectDifficulty(diff) {
-       if ((diff === 'medium' && !unlockedMedium) || (diff === 'hard' && !unlockedHard)) { 
-         AudioController.playMismatch(); 
-         return; 
-       }
+       if ((diff === 'medium' && !unlockedMedium) || (diff === 'hard' && !unlockedHard)) { AudioController.playMismatch(); return; }
        AudioController.playClick();
        selectedDifficulty = diff;
-
-     
-       ['diff-easy', 'diff-medium', 'diff-hard'].forEach(id => {
-         const el = document.getElementById(id);
-         el.classList.remove('ring-4', 'ring-white', 'scale-105', 'shadow-2xl');
-       });
-
-  
-       const selectedEl = document.getElementById(`diff-${diff}`);
-       selectedEl.classList.add('ring-4', 'ring-white', 'scale-105', 'shadow-2xl');
+       ['diff-easy', 'diff-medium', 'diff-hard'].forEach(id => { const el = document.getElementById(id); el.classList.remove('ring-4', 'ring-white', 'scale-105', 'shadow-2xl'); });
+       document.getElementById(`diff-${diff}`).classList.add('ring-4', 'ring-white', 'scale-105', 'shadow-2xl');
      }
+
    function startGame() {
         AudioController.playClick();
         playerName = document.getElementById('player-name-input').value.trim();
         if (!playerName) { document.getElementById('name-error').classList.remove('hidden'); return; }
-        
-        isProcessing = false;
-        flippedCards = [];
-        matchedPairs = 0;
-        moves = 0;
-        activeFact = null;
+        document.getElementById('back-button').style.display = 'none';
+        isProcessing = false; flippedCards = []; matchedPairs = 0; moves = 0; activeFact = null;
         document.getElementById('info-panel').classList.add('hidden');
         clearInterval(timerInterval);
-
-     
         if (countdownInterval) clearInterval(countdownInterval);
         if (startTimeout) clearTimeout(startTimeout);
-
         currentDifficulty = selectedDifficulty;
         const settings = difficulties[currentDifficulty];
-        timeLeft = settings.time;
-        totalPairs = settings.pairsData.length;
-
+        timeLeft = settings.time; totalPairs = settings.pairsData.length;
         document.getElementById('player-display').textContent = playerName;
         document.getElementById('matches-display').textContent = '0';
         document.getElementById('total-pairs').textContent = totalPairs;
         document.getElementById('moves-display').textContent = '0';
         document.getElementById('timer-display').textContent = timeLeft;
-
         showScreen('game-screen');
         createCards(settings.pairsData, settings.gridCols, settings.gridRows);
-
-        const countdownOverlay = document.getElementById('countdown-overlay');
-        const countdownText = document.getElementById('countdown-text');
-        let count = 3;
-        countdownText.textContent = count;
-        countdownOverlay.classList.remove('hidden');
-
+        const countdownOverlay = document.getElementById('countdown-overlay'), countdownText = document.getElementById('countdown-text');
+        let count = 3; countdownText.textContent = count; countdownOverlay.classList.remove('hidden');
         startTimeout = setTimeout(() => {
             AudioController.playFlip();
             document.querySelectorAll('.card').forEach(card => card.classList.add('flipped'));
-            
             countdownInterval = setInterval(() => {
                 count--;
-                if (count > 0) { 
-                    countdownText.textContent = count; 
-                    AudioController.playClick(); 
-                }
-                else if (count === 0) { 
-                    countdownText.textContent = "GO!"; 
-                    AudioController.playTone(800, 'sine', 0.2); 
-                }
-                else {
-                    clearInterval(countdownInterval);
-                    countdownInterval = null;
-                    countdownOverlay.classList.add('hidden');
-                    document.querySelectorAll('.card').forEach(card => card.classList.remove('flipped'));
-                    startTimer();
-                }
+                if (count > 0) { countdownText.textContent = count; AudioController.playClick(); }
+                else if (count === 0) { countdownText.textContent = "GO!"; AudioController.playTone(800, 'sine', 0.2); }
+                else { clearInterval(countdownInterval); countdownInterval = null; countdownOverlay.classList.add('hidden'); document.querySelectorAll('.card').forEach(card => card.classList.remove('flipped')); startTimer(); }
             }, 1000);
         }, 300);
      }
 
      function createCards(indices, gridCols, gridRows) {
-       const gameBoard = document.getElementById('game-board');
-       gameBoard.innerHTML = '';
-       cards = [];
-       indices.forEach((idx, i) => {
-         const pair = allPairs[idx];
-         const color = solidColors[i % solidColors.length];
-         cards.push({ id: `g${idx}`, pairId: idx, icon: pair.good.icon, text: pair.good.text, fact: pair.fact, color: color });
-         cards.push({ id: `b${idx}`, pairId: idx, icon: pair.bad.icon, text: pair.bad.text, fact: pair.fact, color: color });
-       });
+       const gameBoard = document.getElementById('game-board'); gameBoard.innerHTML = ''; cards = [];
+       indices.forEach((idx, i) => { const pair = allPairs[idx]; const color = solidColors[i % solidColors.length]; cards.push({ id: `g${idx}`, pairId: idx, icon: pair.good.icon, text: pair.good.text, fact: pair.fact, color: color }, { id: `b${idx}`, pairId: idx, icon: pair.bad.icon, text: pair.bad.text, fact: pair.fact, color: color }); });
        cards.sort(() => Math.random() - 0.5);
        gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 1fr)`;
        cards.forEach((card, index) => {
-         const cardEl = document.createElement('div');
-         cardEl.className = 'card';
-         cardEl.dataset.cardIndex = index;
-         cardEl.innerHTML = `
-           <div class="card-inner">
-             <div class="card-front"><span class="text-white text-3xl">?</span></div>
-             <div class="card-back" style="background-color: ${card.color};">
-               <span class="text-2xl mb-1">${card.icon}</span>
-               <span class="text-[10px] md:text-xs text-white font-bold text-center leading-tight">${card.text[currentLanguage]}</span>
-             </div>
-           </div>`;
+         const cardEl = document.createElement('div'); cardEl.className = 'card'; cardEl.dataset.cardIndex = index;
+         cardEl.innerHTML = `<div class="card-inner"><div class="card-front"><span class="text-white text-3xl">?</span></div><div class="card-back" style="background-color: ${card.color};"><span class="text-2xl mb-1">${card.icon}</span><span class="text-[10px] md:text-xs text-white font-bold text-center leading-tight">${card.text[currentLanguage]}</span></div></div>`;
          cardEl.addEventListener('click', () => handleCardClick(index));
          gameBoard.appendChild(cardEl);
        });
@@ -751,122 +478,45 @@
        if (isProcessing) return;
        const cardEl = document.querySelector(`[data-card-index="${index}"]`);
        if (cardEl.classList.contains('flipped') || cardEl.classList.contains('matched')) return;
-       AudioController.playFlip();
-       cardEl.classList.add('flipped');
-       flippedCards.push({ index, card: cards[index], element: cardEl });
-       if (flippedCards.length === 2) {
-         moves++;
-         document.getElementById('moves-display').textContent = moves;
-         isProcessing = true;
-         setTimeout(checkMatch, 800);
-       }
+       AudioController.playFlip(); cardEl.classList.add('flipped'); flippedCards.push({ index, card: cards[index], element: cardEl });
+       if (flippedCards.length === 2) { moves++; document.getElementById('moves-display').textContent = moves; isProcessing = true; setTimeout(checkMatch, 800); }
      }
 
      function checkMatch() {
        const [f, s] = flippedCards;
-       if (f.card.pairId === s.card.pairId) {
-         AudioController.playMatch();
-         f.element.classList.add('matched');
-         s.element.classList.add('matched');
-         matchedPairs++;
-         document.getElementById('matches-display').textContent = matchedPairs;
-         activeFact = f.card.fact;
-         showFact(activeFact[currentLanguage], f.card.icon, s.card.icon);
-         if (matchedPairs === totalPairs) setTimeout(winGame, 1000);
-       } else {
-         AudioController.playMismatch();
-         f.element.classList.add('shake');
-         s.element.classList.add('shake');
-         setTimeout(() => { f.element.classList.remove('flipped', 'shake'); s.element.classList.remove('flipped', 'shake'); }, 600);
-       }
-       flippedCards = [];
-       isProcessing = false;
+       if (f.card.pairId === s.card.pairId) { AudioController.playMatch(); f.element.classList.add('matched'); s.element.classList.add('matched'); matchedPairs++; document.getElementById('matches-display').textContent = matchedPairs; activeFact = f.card.fact; showFact(activeFact[currentLanguage], f.card.icon, s.card.icon); if (matchedPairs === totalPairs) setTimeout(winGame, 1000); }
+       else { AudioController.playMismatch(); f.element.classList.add('shake'); s.element.classList.add('shake'); setTimeout(() => { f.element.classList.remove('flipped', 'shake'); s.element.classList.remove('flipped', 'shake'); }, 600); }
+       flippedCards = []; isProcessing = false;
      }
 
-    function showFact(fact, icon1, icon2) {
-  clearInterval(timerInterval); 
-  
-  document.getElementById('info-icon').textContent = `${icon1} ↔️ ${icon2}`;
-  document.getElementById('info-fact').textContent = fact;
-  document.getElementById('info-panel').classList.remove('hidden');
-}
-
-     function startTimer() {
-       timerInterval = setInterval(() => {
-         timeLeft--;
-         document.getElementById('timer-display').textContent = timeLeft;
-         if (timeLeft <= 0) { clearInterval(timerInterval); gameOver(); }
-       }, 1000);
-     }
-
-     function winGame() {
-       clearInterval(timerInterval);
-       AudioController.playWin();
-       showScreen('win-screen');
-       document.getElementById('winner-name').textContent = playerName;
-       document.getElementById('final-time').textContent = `${timeLeft}s`;
-       document.getElementById('final-moves').textContent = moves;
-       
-       let r = 'perf_good';
-       if (moves <= totalPairs * 2 && timeLeft > 10) r = 'perf_perfect';
-       else if (moves <= totalPairs * 2.5) r = 'perf_excellent';
-       document.getElementById('performance-rating').textContent = i18n[currentLanguage][r];
-
-       const nextBtn = document.getElementById('next-level-btn');
-       if (currentDifficulty === 'easy') {
-           unlockedMedium = true;
-           nextBtn.classList.remove('hidden');
-           nextBtn.onclick = () => { selectDifficulty('medium'); startGame(); };
-       } else if (currentDifficulty === 'medium') {
-           unlockedHard = true;
-           nextBtn.classList.remove('hidden');
-           nextBtn.onclick = () => { selectDifficulty('hard'); startGame(); };
-       } else { nextBtn.classList.add('hidden'); }
-       updateDifficultyUI();
-     }
-
+     function showFact(fact, icon1, icon2) { clearInterval(timerInterval); document.getElementById('info-icon').textContent = `${icon1} ↔️ ${icon2}`; document.getElementById('info-fact').textContent = fact; document.getElementById('info-panel').classList.remove('hidden'); }
+     function startTimer() { timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer-display').textContent = timeLeft; if (timeLeft <= 0) { clearInterval(timerInterval); gameOver(); } }, 1000); }
+     function winGame() { clearInterval(timerInterval); AudioController.playWin(); showScreen('win-screen'); document.getElementById('winner-name').textContent = playerName; document.getElementById('final-time').textContent = `${timeLeft}s`; document.getElementById('final-moves').textContent = moves; let r = 'perf_good'; if (moves <= totalPairs * 2 && timeLeft > 10) r = 'perf_perfect'; else if (moves <= totalPairs * 2.5) r = 'perf_excellent'; document.getElementById('performance-rating').textContent = i18n[currentLanguage][r]; const nextBtn = document.getElementById('next-level-btn'); if (currentDifficulty === 'easy') { unlockedMedium = true; nextBtn.classList.remove('hidden'); nextBtn.onclick = () => { selectDifficulty('medium'); startGame(); }; } else if (currentDifficulty === 'medium') { unlockedHard = true; nextBtn.classList.remove('hidden'); nextBtn.onclick = () => { selectDifficulty('hard'); startGame(); }; } else { nextBtn.classList.add('hidden'); } updateDifficultyUI(); }
      function gameOver() { AudioController.playGameOver(); showScreen('gameover-screen'); document.getElementById('gameover-player-name').textContent = playerName; document.getElementById('gameover-matches').textContent = matchedPairs; document.getElementById('gameover-total').textContent = totalPairs; }
-
-    function goBack() {
-         AudioController.playClick();
-         
-    
-         if (countdownInterval) {
-             clearInterval(countdownInterval);
-             countdownInterval = null;
-         }
-         if (startTimeout) {
-             clearTimeout(startTimeout);
-             startTimeout = null;
-         }
-         document.getElementById('countdown-overlay').classList.add('hidden');
-
-         if (!document.getElementById('game-screen').classList.contains('hidden')) { 
-             clearInterval(timerInterval); 
-             showScreen('name-screen'); 
-         }
-         else if (!document.getElementById('name-screen').classList.contains('hidden')) showScreen('rules-screen');
-         else if (!document.getElementById('rules-screen').classList.contains('hidden')) window.history.back();
-         else showScreen('name-screen');
-     }
 
      document.addEventListener('DOMContentLoaded', () => {
        document.getElementById('soundToggle').addEventListener('click', (e) => { e.stopPropagation(); AudioController.toggleMute(); });
-       setTimeout(() => showScreen('rules-screen'), 1500);
-       document.getElementById('understand-btn').addEventListener('click', () => { AudioController.playClick(); showScreen('name-screen'); });
+       
+       // INITIAL STATE: Siguraduhing LOADING lang ang nakikita
+       showScreen('loading-screen');
+
+       // TRANSITION: Pagkalipas ng 2 segundo, ipakita ang RULES (hindi name screen)
+       setTimeout(() => {
+         showScreen('rules-screen');
+       }, 2000);
+
+       // Kapag pinindot ang Understand, doon pa lang lalabas ang NAME SCREEN (Player Setup)
+       document.getElementById('understand-btn').addEventListener('click', () => { 
+         AudioController.playClick(); 
+         showScreen('name-screen'); 
+       });
+
        document.getElementById('start-game-btn').addEventListener('click', startGame);
-    document.getElementById('info-close').addEventListener('click', () => {
-  AudioController.playClick();
-  document.getElementById('info-panel').classList.add('hidden');
-
-
-  if (matchedPairs < totalPairs) {
-    startTimer();
-  }
-});
+       document.getElementById('info-close').addEventListener('click', () => { AudioController.playClick(); document.getElementById('info-panel').classList.add('hidden'); if (matchedPairs < totalPairs) { startTimer(); } });
        document.getElementById('play-again-btn').addEventListener('click', startGame);
-      document.getElementById('retry-btn').addEventListener('click', startGame);
-       setLanguage('en');
+       document.getElementById('retry-btn').addEventListener('click', startGame);
+       
+       setLanguage('en'); 
        selectDifficulty('easy');
      });
      document.addEventListener('click', () => { AudioController.init(); AudioController.startBGM(); }, { once: true });
